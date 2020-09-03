@@ -110,6 +110,11 @@ public class AWSClient : MonoBehaviour
         //Social.localUser.Authenticate(GoogleLoginCallback);
     }
 
+    public CognitoAWSCredentials GetCredentials()
+    {
+        return awsCredentials;
+    }
+
     void FbInitCallBack()
     {
         FB.ActivateApp();
