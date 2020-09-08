@@ -13,6 +13,8 @@ public enum MessageType
     PlayerLeft,
     GameStarted,
     GameReady,
+    PlayerData,
+    TeamData
 };
 
 

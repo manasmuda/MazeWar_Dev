@@ -7,7 +7,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 [Serializable]
 public enum PacketType
 {
-    Spawn
+    UDPConnect,
+    ServerTick,
+    Spawn,
 };
 
 [Serializable]
@@ -17,8 +19,10 @@ public class UdpMsgPacket
     {
         this.type = type;
         this.message = message;
+        this.time=DateTime.UtcNow.Millisecond;
     }
 
     public PacketType type { get; set; }
     public string message { get; set; }
+    public int time { get; set; }
 }
