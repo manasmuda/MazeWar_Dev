@@ -202,6 +202,10 @@ public class NetworkClient
 			HandleOtherPlayerLeft(msg);
 		else if (msg.messageType == MessageType.GameStarted)
 			HandleGameStarted(msg);
+		else if (msg.messageType == MessageType.PlayerData)
+        {
+			HandlePlayerData(msg);
+        }
         else
         {
 			Client.messagesToProcess.Add(msg);
@@ -224,6 +228,14 @@ public class NetworkClient
 		client.Close();
 		client = null;
 	}
+
+	private void HandlePlayerData(SimpleMessage msg)
+    {
+		UdpMsgPacket packet = new UdpMsgPacket(PacketType.UDPConnect,"",msg.playerId,msg.team);
+		MyData.playerId = msg.playerId;
+		MyData.team = msg.team;
+		SendPacket(packet);
+    }
 
 	private void HandlePlayerAccepted(SimpleMessage msg)
     {
