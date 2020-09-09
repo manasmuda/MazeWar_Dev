@@ -31,12 +31,17 @@ public class Client : MonoBehaviour
     //We get events back from the NetworkServer through this static list
     public static List<SimpleMessage> messagesToProcess = new List<SimpleMessage>();
 
-    private float updateCounter = 0.0f;
+
+    private int tick = 0;
+    private float tickRate = 0.2f;
+    private float tickCounter = 0f;
+
+    private bool tickMode = false;
 
     //Cognito credentials for sending signed requests to the API
     //public static Amazon.Runtime.ImmutableCredentials cognitoCredentials = null;
 
-   
+
     public static Client clientInstance = null;
 
     private AWSClient awsClient;    public string roomId;
@@ -189,12 +194,13 @@ public class Client : MonoBehaviour
         if (connectionSuccess)
         {
             // Only send updates 5 times per second to avoid flooding server with messages
-            this.updateCounter += Time.deltaTime;
-            if (updateCounter < 0.2f)
+            this.tickCounter += Time.deltaTime;
+            if (this.tickCounter < 0.2f)
             {
                 return;
             }
-            this.updateCounter = 0.0f;
+            this.tickCounter = 0.0f;
+            tick++;
             this.networkClient.Update();
             if (gameStarted)
             {
@@ -209,7 +215,7 @@ public class Client : MonoBehaviour
 
         yield return null;
 
-        this.networkClient = new NetworkClient();
+        this.networkClient = new NetworkClient(this);
 
 
         yield return StartCoroutine(this.networkClient.DoMatchMakingAndConnect(playerSessionObj));

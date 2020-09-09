@@ -24,9 +24,12 @@ public class NetworkClient
 	private Socket udpClient;
 	private IPEndPoint endPoint;
 
-	public NetworkClient()
+	private Client client;
+
+	public NetworkClient(Client client)
     {
 		//awsClient = GameObject.Find("AWSClient").GetComponent<AWSClient>();
+		this.client = client;
 	}
 
 	// Calls the matchmaking client to do matchmaking against the backend and then connects to the game server with TCP
@@ -257,5 +260,12 @@ public class NetworkClient
 	private void HandleGameStarted(SimpleMessage msg)
     {
 		Debug.Log("Game Started");
+		int ms = DateTime.UtcNow.Millisecond;
+		int dif = ms - msg.time;
+		int tt = dif / 200;
+		int ttc = dif % 200;
+		float ttcf = ((float)ttc) / 1000f;
+		client.tick = tt;
+		client.tickCounter = ttcf;
     }
 }
