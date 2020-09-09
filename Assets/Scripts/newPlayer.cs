@@ -41,6 +41,9 @@ public class newPlayer : MonoBehaviour
 
     public Touch touch;
 
+    public Rigidbody rb;
+    public Animator characterAnim;
+
     public static newPlayer playerController_instance;
 
     private void Awake()
@@ -96,7 +99,7 @@ public class newPlayer : MonoBehaviour
             
         }
             Move();
-       
+
     }
     private void FixedUpdate()
     {
@@ -211,13 +214,15 @@ public class newPlayer : MonoBehaviour
 
         moveInput.x = CnInputManager.GetAxis("MoveHorizontal");
         moveInput.y = CnInputManager.GetAxis("MoveVertical");
-      
 
 
+
+
+        characterAnim.SetFloat("walking", moveInput.y);
 
         Vector2 movementDirection = moveInput * moveSpeed * Time.deltaTime;
         Debug.Log(movementDirection);
-        GetComponent<Rigidbody>().velocity = transform.right * movementDirection.x + transform.forward * movementDirection.y;
+        rb.velocity = transform.right * movementDirection.x + transform.forward * movementDirection.y;
         //characterController.Move(transform.right * movementDirection.x  + transform.forward * movementDirection.y );
     }
 
@@ -228,11 +233,12 @@ public class newPlayer : MonoBehaviour
 
         Debug.DrawRay(cameraPole.position, rayDir, Color.red);
 
-        if (Physics.Raycast(cameraPole.position, rayDir, out RaycastHit hit, Mathf.Abs(maxDistanceDistance-1), cameraObstacleLayer))
+        if (Physics.Raycast(cameraPole.position, rayDir, out RaycastHit hit, Mathf.Abs(maxDistanceDistance), cameraObstacleLayer))
         {
             tpCamTransform.position = hit.point;
         }
         else {
+
             tpCamTransform.localPosition = new Vector3(0,0, maxDistanceDistance);
         }
     }
