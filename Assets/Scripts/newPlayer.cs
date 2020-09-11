@@ -14,16 +14,27 @@ public class newPlayer : MonoBehaviour
     public Transform fpCameraTransform;
     public Transform cameraPole;
     public Transform tpCamTransform;
-
     public LayerMask cameraObstacleLayer;
+
+    [HideInInspector]
    public  float maxDistanceDistance;  
 
-   
+   [Header("Camera Rotation speed")]
+   [Tooltip("Set the rotation speed for camera")]
     public float cameraSensitivity;
+
+    [HideInInspector]
     public float moveSpeed;
+
+    [Header("Walking speed")]
+   [Tooltip("Set the speed for walk")]
+    public float walkSpeed = 170f;
+    [Header("Run Speed")]
+    [Tooltip("Set the speed for run")]
+    public float runningSpeed = 300f;
+
+    
     public float moveInputDeadZone;
-
-
     int leftFingerId;
        int rightFingerId;
     float halfScreenWidth;
@@ -39,10 +50,11 @@ public class newPlayer : MonoBehaviour
     Vector2 moveTouchStartPosition;
     [HideInInspector]
    public Vector2 moveInput;
-
     public Touch touch;
-
+   
     public Rigidbody rb;
+
+
 
 
     public static newPlayer playerController_instance;
@@ -193,21 +205,25 @@ public class newPlayer : MonoBehaviour
         moveInput.x = CnInputManager.GetAxis("MoveHorizontal");
         moveInput.y = CnInputManager.GetAxis("MoveVertical");
 
-     
-      //Controlling speed through the axis
+
+        //Controlling speed through the axis
         if (moveInput.y > 0.75f && moveInput.y <= 1)
         {
-            moveSpeed = Mathf.Lerp(150f, 300f, 1f);
+            moveSpeed = Mathf.Lerp(walkSpeed, runningSpeed, 1f);
         }
         else if (moveInput.y >= 0.1f)
         {
 
-            moveSpeed = 170f;
+            moveSpeed = walkSpeed;
         }
         else if (moveInput.y == 0f)
         {
 
             moveSpeed = 0f;
+        }
+        else if (moveInput.y>-1&& moveInput.y<0)
+        {
+            moveSpeed = walkSpeed;
         }
 
      //moving along direction
