@@ -32,9 +32,9 @@ public class Client : MonoBehaviour
     public static List<SimpleMessage> messagesToProcess = new List<SimpleMessage>();
 
 
-    private int tick = 0;
+    public int tick = 0;
     private float tickRate = 0.2f;
-    private float tickCounter = 0f;
+    public float tickCounter = 0f;
 
     private bool tickMode = false;
 
@@ -236,19 +236,25 @@ public class Client : MonoBehaviour
         // Go through any messages to process
         foreach (SimpleMessage msg in messagesToProcess)
         {
-            if(msg.messageType == MessageType.GameReady)
-            {
-                HandleGameReady(msg);
-            }
-           
+             
         }
         messagesToProcess.Clear();
     }
 
-    void HandleGameReady(SimpleMessage msg)
+    public void GameReady(int timeLeft)
     {
-        Debug.Log("GameReady");
+        StartCoroutine(StartLobby(timeLeft));
        
+    }
+
+    IEnumerator StartLobby(int timeLeft)
+    {
+        Debug.Log("Lobby Started");
+        yield return new WaitForSeconds(timeLeft / 1000);
+
+        Debug.Log("Lobby Ended");
+
+
     }
 
     public void HandleOpponentLeft()
