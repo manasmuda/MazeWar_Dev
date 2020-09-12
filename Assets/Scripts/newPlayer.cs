@@ -14,16 +14,27 @@ public class newPlayer : MonoBehaviour
     public Transform fpCameraTransform;
     public Transform cameraPole;
     public Transform tpCamTransform;
-
     public LayerMask cameraObstacleLayer;
+
+    [HideInInspector]
    public  float maxDistanceDistance;  
 
-   
+   [Header("Camera Rotation speed")]
+   [Tooltip("Set the rotation speed for camera")]
     public float cameraSensitivity;
+
+    [HideInInspector]
     public float moveSpeed;
+
+    [Header("Walking speed")]
+   [Tooltip("Set the speed for walk")]
+    public float walkSpeed = 170f;
+    [Header("Run Speed")]
+    [Tooltip("Set the speed for run")]
+    public float runningSpeed = 300f;
+
+    
     public float moveInputDeadZone;
-
-
     int leftFingerId;
        int rightFingerId;
     float halfScreenWidth;
@@ -37,12 +48,14 @@ public class newPlayer : MonoBehaviour
 
    
     Vector2 moveTouchStartPosition;
-    Vector2 moveInput;
-
+    [HideInInspector]
+   public Vector2 moveInput;
     public Touch touch;
-
+   
     public Rigidbody rb;
-    public Animator characterAnim;
+
+
+
 
     public static newPlayer playerController_instance;
 
@@ -89,20 +102,16 @@ public class newPlayer : MonoBehaviour
         if (rightFingerId != -1)
         {
            
-            
             LookAround();
         }
 
-        if (leftFingerId != -1)
-        {
-            
-            
-        }
+       
             Move();
 
     }
     private void FixedUpdate()
     {
+        
         if (Mode == playerCameraMode.thirdPerson)
         {
             MoveCamera();
@@ -123,16 +132,8 @@ public class newPlayer : MonoBehaviour
             {
                 case TouchPhase.Began:
 
-                    if (touch.position.x < halfScreenWidth && leftFingerId == -1)
-                    {
-
-                        leftFingerId = touch.fingerId;    
-                        
-                            moveTouchStartPosition = touch.position;
-                           
-
-                    }
-                    else if (touch.position.x > halfScreenWidth && rightFingerId == -1)
+                 
+                     if (touch.position.x > halfScreenWidth && rightFingerId == -1)
                     {
                        
                         rightFingerId = touch.fingerId;
@@ -142,13 +143,8 @@ public class newPlayer : MonoBehaviour
                 case TouchPhase.Ended:
                 case TouchPhase.Canceled:
 
-                    if (touch.fingerId == leftFingerId)
-                    {
-                     
-                        leftFingerId = -1;
-                       // Debug.Log("Stopped tracking left finger");
-                    }
-                    else if (touch.fingerId == rightFingerId)
+                  
+                     if (touch.fingerId == rightFingerId)
                     {
                         
                         rightFingerId = -1;
@@ -164,15 +160,8 @@ public class newPlayer : MonoBehaviour
                        
                         lookInput = touch.deltaPosition * cameraSensitivity * Time.deltaTime;
                     }
-                    else if (touch.fingerId == leftFingerId)
-                    {
-
-                      
-
-                        moveInput = touch.position - moveTouchStartPosition;
-                    }
-
-                        Debug.Log(touch.deltaPosition);
+                  
+                    
                     break;
                 case TouchPhase.Stationary:
                    
@@ -212,23 +201,41 @@ public class newPlayer : MonoBehaviour
             if (moveInput.sqrMagnitude <= moveInputDeadZone) return;
         }
 
+        //Setting Joystick axis 
         moveInput.x = CnInputManager.GetAxis("MoveHorizontal");
         moveInput.y = CnInputManager.GetAxis("MoveVertical");
 
 
+        //Controlling speed through the axis
+        if (moveInput.y > 0.75f && moveInput.y <= 1)
+        {
+            moveSpeed = Mathf.Lerp(walkSpeed, runningSpeed, 1f);
+        }
+        else if (moveInput.y >= 0.1f)
+        {
 
+            moveSpeed = walkSpeed;
+        }
+        else if (moveInput.y == 0f)
+        {
 
-        characterAnim.SetFloat("walking", moveInput.y);
+            moveSpeed = 0f;
+        }
+        else if (moveInput.y>-1&& moveInput.y<0)
+        {
+            moveSpeed = walkSpeed;
+        }
 
+     //moving along direction
         Vector2 movementDirection = moveInput * moveSpeed * Time.deltaTime;
-        Debug.Log(movementDirection);
         rb.velocity = transform.right * movementDirection.x + transform.forward * movementDirection.y;
-        //characterController.Move(transform.right * movementDirection.x  + transform.forward * movementDirection.y );
+       
     }
 
 
     void MoveCamera()
     {
+        // camera collision
         Vector3 rayDir = tpCamTransform.position - cameraPole.position;
 
         Debug.DrawRay(cameraPole.position, rayDir, Color.red);
@@ -242,4 +249,7 @@ public class newPlayer : MonoBehaviour
             tpCamTransform.localPosition = new Vector3(0,0, maxDistanceDistance);
         }
     }
+
+
+  
 }
