@@ -24,9 +24,12 @@ public class NetworkClient
 	private Socket udpClient;
 	private IPEndPoint endPoint;
 
-	public NetworkClient()
+	private Client clientScript;
+
+	public NetworkClient(Client client)
     {
 		//awsClient = GameObject.Find("AWSClient").GetComponent<AWSClient>();
+		this.clientScript = client;
 	}
 
 	// Calls the matchmaking client to do matchmaking against the backend and then connects to the game server with TCP
@@ -200,12 +203,18 @@ public class NetworkClient
 			HandlePlayerAccepted(msg);
 		else if (msg.messageType == MessageType.PlayerLeft)
 			HandleOtherPlayerLeft(msg);
+		else if (msg.messageType == MessageType.GameReady)
+			HandleGameReady(msg);
 		else if (msg.messageType == MessageType.GameStarted)
 			HandleGameStarted(msg);
-        else
-        {
+		else if (msg.messageType == MessageType.PlayerData)
+		{
+			HandlePlayerData(msg);
+		}
+		else
+		{
 			Client.messagesToProcess.Add(msg);
-        }
+		}
 	}
 
 	private void HandleReject()
@@ -225,6 +234,14 @@ public class NetworkClient
 		client = null;
 	}
 
+	private void HandlePlayerData(SimpleMessage msg)
+    {
+		UdpMsgPacket packet = new UdpMsgPacket(PacketType.UDPConnect,"",msg.playerId,msg.team);
+		MyData.playerId = msg.playerId;
+		MyData.team = msg.team;
+		SendPacket(packet);
+    }
+
 	private void HandlePlayerAccepted(SimpleMessage msg)
     {
 		Debug.Log("Player Accepted");
@@ -242,8 +259,25 @@ public class NetworkClient
 		client = null;
 	}
 
+	private void HandleGameReady(SimpleMessage msg)
+    {
+		Debug.Log("Game Ready");
+		int ms = DateTime.UtcNow.Millisecond;
+		int dif = ms - msg.time;
+		int tr = dif / 1000;
+		Debug.Log("Time Remaining " + tr);
+		clientScript.GameReady(dif);
+	}
+
 	private void HandleGameStarted(SimpleMessage msg)
     {
 		Debug.Log("Game Started");
+		int ms = DateTime.UtcNow.Millisecond;
+		int dif = ms - msg.time;
+		int tt = dif / 200;
+		int ttc = dif % 200;
+		float ttcf = ((float)ttc) / 1000f;
+		clientScript.tick = tt;
+		clientScript.tickCounter = ttcf;
     }
 }

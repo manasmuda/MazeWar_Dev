@@ -32,7 +32,7 @@ public class NTest : MonoBehaviour
 
     void SendMsg()
     {
-        UdpMsgPacket msgPacket = new UdpMsgPacket(PacketType.Spawn, msg.text);
+        UdpMsgPacket msgPacket = new UdpMsgPacket(PacketType.Spawn, msg.text,"","");
         client.networkClient.SendPacket(msgPacket);
     }
 
