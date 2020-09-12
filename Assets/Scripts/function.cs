@@ -11,33 +11,34 @@ public class function : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Invoke("Custom",1f);
+       
     }
 
     // Update is called once per frame
     void Update()
     {
       
-        Customfunction(gameObject, gameObject.transform.position, gameObject.transform.rotation, lastpos.position, minspeed, maxspeed);
+      
     }
 
 
 
-    void Customfunction(GameObject moveableObject, Vector3 currentPos, Quaternion rot, Vector3 targetPose, float speed,float maxSpeed)
+    IEnumerator Customfunction(GameObject moveableObject, Vector3 currentPos, Quaternion rot, Vector3 targetPose, float speed,float maxSpeed)
     {
+        //yield return new WaitForSeconds(2f);
         GameObject Moveobj = moveableObject;
-        currentPos = Moveobj.transform.position;
         Vector3 target = targetPose;
-       
-        Vector3 dir = target - moveableObject.transform.position;
-        rot = Quaternion.LookRotation(dir);
+        while (Vector3.Distance(moveableObject.transform.position, target) > 0.5f)
+        {
+           
+            currentPos = Moveobj.transform.position;
+           
 
-        if (Vector3.Distance(moveableObject.transform.position, target) < 0.5f)
-        {
-            speed = 0;
-        }
-        else
-        {
+            Vector3 dir = target - moveableObject.transform.position;
+            rot = Quaternion.LookRotation(dir);
+            Debug.Log("funtion");
+
             if (speed < maxSpeed)
             {
                 speed += speed * Time.deltaTime;
@@ -46,10 +47,17 @@ public class function : MonoBehaviour
             {
                 speed = maxSpeed;
             }
+            Moveobj.transform.position = Vector3.MoveTowards(currentPos, Vector3.Lerp(currentPos, target, Time.deltaTime), speed);
+            Moveobj.transform.rotation = Quaternion.Lerp(Moveobj.transform.rotation, rot, speed);
+            yield return new WaitForEndOfFrame();
         }
-        Moveobj.transform.position = Vector3.MoveTowards(currentPos,Vector3.Lerp(currentPos,target,Time.deltaTime),speed);
-        Moveobj.transform.rotation = Quaternion.Lerp(Moveobj.transform.rotation, rot, speed);
-      
+        speed = 0;
+        Custom();
     }
 
+
+    void Custom()
+    {
+        StartCoroutine((Customfunction(gameObject, gameObject.transform.position, gameObject.transform.rotation, lastpos.position, minspeed, maxspeed)));
+    }
 }
