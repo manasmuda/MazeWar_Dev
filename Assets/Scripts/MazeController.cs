@@ -18,7 +18,7 @@ public class MazeController : MonoBehaviour
         
     }
 
-    void InstantiateMaze(MazeCell[,] maze)
+    public void InstantiateMaze(MazeCell[,] maze)
     {
         for (int i = 0; i < 20; i++)
         {

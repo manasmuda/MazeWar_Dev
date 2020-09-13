@@ -44,7 +44,11 @@ public class Client : MonoBehaviour
 
     public static Client clientInstance = null;
 
-    private AWSClient awsClient;    public string roomId;
+    private AWSClient awsClient;    
+    public string roomId;
+
+    [SerializeField]
+    private MazeController mazeController;
 
     void Awake()
     {
@@ -68,6 +72,7 @@ public class Client : MonoBehaviour
     // Called by Unity when the Gameobject is created
     void Start()
     {
+        
         //awsClient = GameObject.Find("AWSClient").GetComponent<AWSClient>();
         // Set up Mobile SDK
     }
@@ -178,7 +183,12 @@ public class Client : MonoBehaviour
     public void ConnectWithPlayerId(string playerIdx)
     {
         playerSessionObj = new PlayerSessionObject();
+#if UNITY_ANDROID
+        playerSessionObj.IpAddress = "10.0.2.2";
+#endif
+#if UNITY_PLAYER
         playerSessionObj.IpAddress = "127.0.0.1";
+#endif
         playerSessionObj.Port = 1935;
         playerSessionObj.GameSessionId = "gsess-abc";
         playerSessionObj.PlayerSessionId = playerIdx;
@@ -272,5 +282,21 @@ public class Client : MonoBehaviour
         
         gameStarted = false;
         roomId = null;
+    }
+
+    public void SetUpMaze(MazeCell[,] maze)
+    {
+        StartCoroutine(SetMaze(maze));
+    }
+
+    IEnumerator SetMaze(MazeCell[,] maze)
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        GameObject MCO = GameObject.Find("Ground");
+        Debug.Log(MCO);
+        mazeController = MCO.GetComponent<MazeController>();
+        Debug.Log(mazeController);
+        mazeController.InstantiateMaze(maze);
     }
 }

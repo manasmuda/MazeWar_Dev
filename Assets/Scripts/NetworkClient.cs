@@ -4,6 +4,7 @@ using System.Net;
 using System.Text;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 // *** NETWORK CLIENT FOR TCP CONNECTIONS WITH THE SERVER ***
 
@@ -208,9 +209,7 @@ public class NetworkClient
 		else if (msg.messageType == MessageType.GameStarted)
 			HandleGameStarted(msg);
 		else if (msg.messageType == MessageType.PlayerData)
-		{
 			HandlePlayerData(msg);
-		}
 		else
 		{
 			Client.messagesToProcess.Add(msg);
@@ -236,6 +235,7 @@ public class NetworkClient
 
 	private void HandlePlayerData(SimpleMessage msg)
     {
+		Debug.Log("Recieved Player Data");
 		UdpMsgPacket packet = new UdpMsgPacket(PacketType.UDPConnect,"",msg.playerId,msg.team);
 		MyData.playerId = msg.playerId;
 		MyData.team = msg.team;
@@ -245,6 +245,7 @@ public class NetworkClient
 	private void HandlePlayerAccepted(SimpleMessage msg)
     {
 		Debug.Log("Player Accepted");
+		SceneManager.LoadScene("GameScene");// Remove 
     }
 
 	private void HandleOtherPlayerLeft(SimpleMessage message)
@@ -267,6 +268,9 @@ public class NetworkClient
 		int tr = dif / 1000;
 		Debug.Log("Time Remaining " + tr);
 		clientScript.GameReady(dif);
+		MazeCell[,] maze=MazeConvertor.ToMazeArray(msg.listData);
+		clientScript.SetUpMaze(maze);
+		//
 	}
 
 	private void HandleGameStarted(SimpleMessage msg)
