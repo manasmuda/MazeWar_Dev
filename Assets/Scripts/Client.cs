@@ -50,6 +50,9 @@ public class Client : MonoBehaviour
     [SerializeField]
     private MazeController mazeController;
 
+    [SerializeField]
+    private GameObject character;
+
     void Awake()
     {
         UnityInitializer.AttachToGameObject(this.gameObject);
@@ -183,12 +186,12 @@ public class Client : MonoBehaviour
     public void ConnectWithPlayerId(string playerIdx)
     {
         playerSessionObj = new PlayerSessionObject();
-#if UNITY_ANDROID
-        playerSessionObj.IpAddress = "10.0.2.2";
-#endif
-#if UNITY_PLAYER
+//#if UNITY_ANDROID
+        //playerSessionObj.IpAddress = "10.0.2.2";
+//#endif
+//#if UNITY_PLAYER
         playerSessionObj.IpAddress = "127.0.0.1";
-#endif
+//#endif
         playerSessionObj.Port = 1935;
         playerSessionObj.GameSessionId = "gsess-abc";
         playerSessionObj.PlayerSessionId = playerIdx;
@@ -215,6 +218,7 @@ public class Client : MonoBehaviour
             if (gameStarted)
             {
                 ProcessMessages();
+                CreateClientState();
             }
         }
 
@@ -251,17 +255,31 @@ public class Client : MonoBehaviour
         messagesToProcess.Clear();
     }
 
+    public void CreateClientState()
+    {
+        ClientState clientState = new ClientState();
+        clientState.tick = tick;
+        clientState.playerId = MyData.playerId;
+        clientState.position = new float[3]{character.transform.position.x, character.transform.position.y, character.transform.position.z};
+        clientState.angle = new float[3] { character.transform.rotation.x, character.transform.rotation.y, character.transform.rotation.z };
+        UdpMsgPacket packet = new UdpMsgPacket(PacketType.ClientState, "", MyData.playerId, MyData.team);
+        packet.clientState = clientState;
+        networkClient.SendPacket(packet);
+        Debug.Log("Client State Sent");
+    }
+
     public void GameReady(int timeLeft)
     {
         StartCoroutine(StartLobby(timeLeft));
-       
     }
 
     IEnumerator StartLobby(int timeLeft)
     {
         Debug.Log("Lobby Started");
-        yield return new WaitForSeconds(timeLeft / 1000);
+        yield return new WaitForSeconds(10- timeLeft / 1000);
 
+        tick = 0;
+        gameStarted = true;
         Debug.Log("Lobby Ended");
 
 
@@ -284,6 +302,8 @@ public class Client : MonoBehaviour
         roomId = null;
     }
 
+
+    //Remove Coroutines for functions below this after detailed matchmaking
     public void SetUpMaze(MazeCell[,] maze)
     {
         StartCoroutine(SetMaze(maze));
@@ -299,4 +319,19 @@ public class Client : MonoBehaviour
         Debug.Log(mazeController);
         mazeController.InstantiateMaze(maze);
     }
+
+    public void CharacterSpwan(Vector3 pos)
+    {
+        StartCoroutine(CharSpawn(pos));
+    }
+
+    IEnumerator CharSpawn(Vector3 pos)
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        character = GameObject.Find("Player_Character");
+        character.transform.position = pos;
+    }
+
+    // End Function changes
 }

@@ -210,6 +210,8 @@ public class NetworkClient
 			HandleGameStarted(msg);
 		else if (msg.messageType == MessageType.PlayerData)
 			HandlePlayerData(msg);
+		else if (msg.messageType == MessageType.PlayerGameData)
+			HandlePlayerGameData(msg);
 		else
 		{
 			Client.messagesToProcess.Add(msg);
@@ -284,4 +286,11 @@ public class NetworkClient
 		clientScript.tick = tt;
 		clientScript.tickCounter = ttcf;
     }
+
+	private void HandlePlayerGameData(SimpleMessage msg)
+    {
+		Debug.Log("Player Game Data Recieved");
+		Vector3 pos = new Vector3(msg.floatArrData[0],msg.floatArrData[1],msg.floatArrData[2]);
+		clientScript.CharacterSpwan(pos);
+    } 
 }

@@ -14,7 +14,9 @@ public enum MessageType
     GameStarted,
     GameReady,
     PlayerData,
-    TeamData
+    PlayerGameData,
+    TeamData,
+    PlayerGameReady
 };
 
 
@@ -47,6 +49,14 @@ public class SimpleMessage
     public int ih { get; set; }
     public int intData { get; set; }
     public string stringData { get; set; }
+    public float floatData { get; set; }
+    public int[] intArrData { get; set; }
+    public float[] floatArrData { get; set; }
+    public string[] stringArrData { get; set; }
+
+
+
+
 
     // As we are using one generic message for simplicity, we always have all possible data here
     // You would likely want to use different classes for different message types
