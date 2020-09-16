@@ -313,7 +313,7 @@ public class Client : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        GameObject MCO = GameObject.Find("Ground");
+        GameObject MCO = GameObject.Find("Maze");
         Debug.Log(MCO);
         mazeController = MCO.GetComponent<MazeController>();
         Debug.Log(mazeController);
@@ -329,7 +329,7 @@ public class Client : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        character = GameObject.Find("Player_Character");
+        character = GameObject.Find("Player_Character/Character1");
         character.transform.position = pos;
     }
 

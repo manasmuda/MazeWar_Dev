@@ -167,6 +167,7 @@ public class NetworkClient
 
 			byte[] arr = NetworkProtocol.getPacketBytes(msgPacket);
 			udpClient.SendTo(arr, endPoint);
+			Debug.Log("Packet Sent:" + msgPacket.type);
 		}
 		catch(Exception e)
         {
