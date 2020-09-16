@@ -78,7 +78,7 @@ public class NetworkClient
             client.NoDelay = true; // Use No Delay to send small messages immediately. UDP should be used for even faster messaging
 			Debug.Log("Done");
 
-			endPoint = new IPEndPoint(IPAddress.Parse(this.playerSessionObject.IpAddress), this.playerSessionObject.Port);
+			endPoint = new IPEndPoint(IPAddress.Parse(this.playerSessionObject.IpAddress), this.playerSessionObject.Port+20);
 			udpClient = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 			udpClient.Blocking = false;
 			Debug.Log("UdpClient Created");
