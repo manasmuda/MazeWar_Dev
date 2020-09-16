@@ -10,6 +10,8 @@ public enum PacketType
     UDPConnect,
     ServerTick,
     Spawn,
+    ClientState,
+    GameState
 };
 
 [Serializable]
@@ -28,4 +30,6 @@ public class UdpMsgPacket
     public string playerId { get; set; }
     public string team { get; set; }
     public int time { get; set; }
+    public ClientState clientState { get; set; }
+    public GameState gameState { get; set; }
 }
