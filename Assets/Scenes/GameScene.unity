@@ -1011,7 +1011,7 @@ Transform:
   m_GameObject: {fileID: 574230904}
   m_LocalRotation: {x: -0.000000009954143, y: -0.0000034372465, z: 0.00000004663905,
     w: 1}
-  m_LocalPosition: {x: 26.52, y: 0.77, z: -19.58}
+  m_LocalPosition: {x: 26.52, y: 0.77, z: 57}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1037,7 +1037,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 381f7a7fdef6b08458ea17e0b7657c23,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.3938627
+      value: 3.03
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 381f7a7fdef6b08458ea17e0b7657c23,
         type: 3}
@@ -1083,6 +1083,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Sci-Fi walls Final_done
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 381f7a7fdef6b08458ea17e0b7657c23,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 381f7a7fdef6b08458ea17e0b7657c23, type: 3}
@@ -1199,8 +1204,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 651212772}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.3435114, y: 2.8548763, z: -7.8066}
-  m_LocalScale: {x: 1.8919, y: 1.8919, z: 1.8919}
+  m_LocalPosition: {x: 0, y: 2.8548763, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5006512735046334104}
   m_Father: {fileID: 0}
@@ -1271,7 +1276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5a27dd0c99e782499936e0d3e862b72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mazeObject: {fileID: -927199367670048503, guid: 381f7a7fdef6b08458ea17e0b7657c23,
+  mazeObject: {fileID: 471068380057833255, guid: 41b970ce732a4e34485d3fad9bf09a19,
     type: 3}
 --- !u!4 &804011300
 Transform:
@@ -2829,7 +2834,6 @@ GameObject:
   - component: {fileID: 1434256391}
   - component: {fileID: 1434256390}
   - component: {fileID: 1434256392}
-  - component: {fileID: 1434256393}
   m_Layer: 5
   m_Name: CrouchButton
   m_TagString: Untagged
@@ -2938,20 +2942,6 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &1434256393
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1434256388}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7dc349a7b262cb747a17e00305d7ff07, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isCrouched: 0
-  hitTimes: 0
 --- !u!1 &1477429500
 GameObject:
   m_ObjectHideFlags: 0
@@ -4183,7 +4173,7 @@ Transform:
   m_GameObject: {fileID: 2034455516}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: -432.2638, y: -0.3602199, z: -432.2638}
+  m_LocalScale: {x: 120, y: -0.3602199, z: 120}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
@@ -6108,8 +6098,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8296172668956247179}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.006999994, y: -1.3980001, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -2.88, z: 0}
+  m_LocalScale: {x: 1.89, y: 1.89, z: 1.89}
   m_Children:
   - {fileID: 8778850931334184214}
   - {fileID: 4531176952806073488}
@@ -7366,12 +7356,10 @@ MonoBehaviour:
     m_Bits: 1
   maxDistanceDistance: 0
   cameraSensitivity: 10
-  currentSpeed: 0
+  moveSpeed: 0
   walkSpeed: 170
   runningSpeed: 300
   moveInputDeadZone: 10
-  lookInput: {x: 0, y: 0}
-  cameraPitch: 0
   maxClamp: 20
   minClamp: -30
   moveInput: {x: 0, y: 0}
