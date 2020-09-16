@@ -260,6 +260,7 @@ public class Client : MonoBehaviour
         ClientState clientState = new ClientState();
         clientState.tick = tick;
         clientState.playerId = MyData.playerId;
+        clientState.team = MyData.team;
         clientState.position = new float[3]{character.transform.position.x, character.transform.position.y, character.transform.position.z};
         clientState.angle = new float[3] { character.transform.rotation.x, character.transform.rotation.y, character.transform.rotation.z };
         UdpMsgPacket packet = new UdpMsgPacket(PacketType.ClientState, "", MyData.playerId, MyData.team);
@@ -329,7 +330,7 @@ public class Client : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        character = GameObject.Find("Player_Character/Character1");
+        character = GameObject.Find("Character 1");
         character.transform.position = pos;
     }
 

@@ -213,6 +213,8 @@ public class NetworkClient
 			HandlePlayerData(msg);
 		else if (msg.messageType == MessageType.PlayerGameData)
 			HandlePlayerGameData(msg);
+		else if (msg.messageType == MessageType.ServerTick)
+			HandleServerTick(msg);
 		else
 		{
 			Client.messagesToProcess.Add(msg);
@@ -294,4 +296,16 @@ public class NetworkClient
 		Vector3 pos = new Vector3(msg.floatArrData[0],msg.floatArrData[1],msg.floatArrData[2]);
 		clientScript.CharacterSpwan(pos);
     } 
+
+	private void HandleServerTick(SimpleMessage msg)
+    {
+		Debug.Log("Handle Server Tick");
+		int ms = DateTime.UtcNow.Millisecond;
+		int dif = ms - msg.time;
+		int tt = dif / 200;
+		int ttc = dif % 200;
+		float ttcf = ((float)ttc) / 1000f;
+		clientScript.tick = msg.intData+tt;
+		clientScript.tickCounter = ttcf;
+	}
 }

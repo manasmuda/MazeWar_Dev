@@ -7,6 +7,7 @@ public class ClientState
     public int tick = 0;
 
     public string playerId;
+    public string team;
 
     public float[] position = new float[3];
     public float[] angle = new float[3];
