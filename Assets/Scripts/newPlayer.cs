@@ -23,8 +23,8 @@ public class newPlayer : MonoBehaviour
    [Tooltip("Set the rotation speed for camera")]
     public float cameraSensitivity;
 
-    [HideInInspector]
-    public float moveSpeed;
+    
+    public float currentSpeed;
 
     [Header("Walking speed")]
    [Tooltip("Set the speed for walk")]
@@ -35,27 +35,35 @@ public class newPlayer : MonoBehaviour
 
     
     public float moveInputDeadZone;
-    int leftFingerId;
+  
        int rightFingerId;
     float halfScreenWidth;
 
- 
-    Vector2 lookInput;
-    float cameraPitch;
 
+    Vector2 lookInput;
+
+
+           float cameraPitch;
     public float maxClamp;
     public float minClamp;
 
-   
+
+
+    float maxCamY = 1.682f;
+    float minCamY =1.45f;
+
+
     Vector2 moveTouchStartPosition;
     [HideInInspector]
+
    public Vector2 moveInput;
-    public Touch touch;
+
+   Touch touch;
    
     public Rigidbody rb;
 
 
-
+  
 
     public static newPlayer playerController_instance;
 
@@ -75,12 +83,12 @@ public class newPlayer : MonoBehaviour
     void Start()
     {
       
-        leftFingerId = -1;
+       
         rightFingerId = -1;
 
     
         halfScreenWidth = Screen.width / 2;
-
+       
        
         moveInputDeadZone = Mathf.Pow(Screen.height / moveInputDeadZone, 2);
 
@@ -104,17 +112,29 @@ public class newPlayer : MonoBehaviour
            
             LookAround();
         }
-
-       
             Move();
+        
 
     }
     private void FixedUpdate()
     {
-        
+
+     
         if (Mode == playerCameraMode.thirdPerson)
         {
+            //checking whether the player is crouched or not
+            if (crouch_Button.instance.isCrouched)
+            {
+                //aligning camera if crouched
+                cameraPole.localPosition = new Vector3(cameraPole.localPosition.x, Mathf.Lerp(cameraPole.localPosition.y, minCamY, 0.2f), cameraPole.localPosition.z);
+            }
+            else
+            {
+                //aligning camera if  not crouched
+                cameraPole.localPosition = new Vector3(cameraPole.localPosition.x, Mathf.Lerp(cameraPole.localPosition.y, maxCamY, 0.2f), cameraPole.localPosition.z);
+            }
             MoveCamera();
+            
         
         }
     }
@@ -189,12 +209,12 @@ public class newPlayer : MonoBehaviour
                 break;
             
         }
-        transform.Rotate(transform.up, lookInput.x);
+        transform.Rotate(Vector3.up, lookInput.x);
     }
 
     void Move()
     {
-
+        
 
         if (Mode == playerCameraMode.Fps)
         {
@@ -209,25 +229,25 @@ public class newPlayer : MonoBehaviour
         //Controlling speed through the axis
         if (moveInput.y > 0.75f && moveInput.y <= 1)
         {
-            moveSpeed = Mathf.Lerp(walkSpeed, runningSpeed, 1f);
+            currentSpeed = Mathf.Lerp(walkSpeed, runningSpeed, 1f);
         }
         else if (moveInput.y >= 0.1f)
         {
 
-            moveSpeed = walkSpeed;
+            currentSpeed = walkSpeed;
         }
         else if (moveInput.y == 0f)
         {
 
-            moveSpeed = 0f;
+            currentSpeed = 0f;
         }
         else if (moveInput.y>-1&& moveInput.y<0)
         {
-            moveSpeed = walkSpeed;
+            currentSpeed = walkSpeed;
         }
 
      //moving along direction
-        Vector2 movementDirection = moveInput * moveSpeed * Time.deltaTime;
+        Vector2 movementDirection = moveInput * currentSpeed * Time.deltaTime;
         rb.velocity = transform.right * movementDirection.x + transform.forward * movementDirection.y;
        
     }
