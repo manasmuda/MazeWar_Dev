@@ -1087,7 +1087,7 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 381f7a7fdef6b08458ea17e0b7657c23,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 381f7a7fdef6b08458ea17e0b7657c23, type: 3}
@@ -2803,6 +2803,7 @@ GameObject:
   - component: {fileID: 1434256391}
   - component: {fileID: 1434256390}
   - component: {fileID: 1434256392}
+  - component: {fileID: 1434256393}
   m_Layer: 5
   m_Name: CrouchButton
   m_TagString: Untagged
@@ -2911,6 +2912,20 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1434256393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1434256388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dc349a7b262cb747a17e00305d7ff07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isCrouched: 0
+  hitTimes: 0
 --- !u!1 &1477429500
 GameObject:
   m_ObjectHideFlags: 0
@@ -6729,10 +6744,10 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -6922793697723135513, guid: 6b02f23b78dfa854ca15a09901e01e7e, type: 3}
+  - {fileID: 2100000, guid: 7887c3c65377e4543a22360736342db3, type: 2}
   - {fileID: -4246479402191905792, guid: 6b02f23b78dfa854ca15a09901e01e7e, type: 3}
   - {fileID: -8693172909504858975, guid: 6b02f23b78dfa854ca15a09901e01e7e, type: 3}
-  - {fileID: -541708846208547136, guid: 6b02f23b78dfa854ca15a09901e01e7e, type: 3}
+  - {fileID: -8693172909504858975, guid: 6b02f23b78dfa854ca15a09901e01e7e, type: 3}
   - {fileID: -7198559261415225722, guid: 6b02f23b78dfa854ca15a09901e01e7e, type: 3}
   - {fileID: -5998004595915773402, guid: 6b02f23b78dfa854ca15a09901e01e7e, type: 3}
   - {fileID: 7498461928983958705, guid: 6b02f23b78dfa854ca15a09901e01e7e, type: 3}
@@ -6741,7 +6756,7 @@ SkinnedMeshRenderer:
   - {fileID: 880774007180850119, guid: 6b02f23b78dfa854ca15a09901e01e7e, type: 3}
   - {fileID: -3522955778539423533, guid: 6b02f23b78dfa854ca15a09901e01e7e, type: 3}
   - {fileID: -3846018093981099296, guid: 6b02f23b78dfa854ca15a09901e01e7e, type: 3}
-  - {fileID: 725804396391725484, guid: 6b02f23b78dfa854ca15a09901e01e7e, type: 3}
+  - {fileID: 2100000, guid: ce226c4ba6828cc4d950118170196e71, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7325,7 +7340,7 @@ MonoBehaviour:
     m_Bits: 1
   maxDistanceDistance: 0
   cameraSensitivity: 10
-  moveSpeed: 0
+  currentSpeed: 0
   walkSpeed: 170
   runningSpeed: 300
   moveInputDeadZone: 10
