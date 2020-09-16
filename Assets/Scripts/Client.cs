@@ -186,12 +186,13 @@ public class Client : MonoBehaviour
     public void ConnectWithPlayerId(string playerIdx)
     {
         playerSessionObj = new PlayerSessionObject();
-//#if UNITY_ANDROID
+        //#if UNITY_ANDROID
         //playerSessionObj.IpAddress = "10.0.2.2";
-//#endif
-//#if UNITY_PLAYER
+        //#endif
+        //#if UNITY_PLAYER
+        //playerSessionObj.IpAddress = "192.168.43.254";// ip address if using lan
         playerSessionObj.IpAddress = "127.0.0.1";
-//#endif
+        //#endif
         playerSessionObj.Port = 1935;
         playerSessionObj.GameSessionId = "gsess-abc";
         playerSessionObj.PlayerSessionId = playerIdx;
