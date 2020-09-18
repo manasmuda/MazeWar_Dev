@@ -36,7 +36,7 @@ public class newPlayer : MonoBehaviour
     
     public float moveInputDeadZone;
   
-       int rightFingerId;
+    int rightFingerId;
     float halfScreenWidth;
 
 

@@ -5,6 +5,7 @@ using System.Text;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 // *** NETWORK CLIENT FOR TCP CONNECTIONS WITH THE SERVER ***
 
@@ -64,6 +65,7 @@ public class NetworkClient
 			//string data = Encoding.Default.GetString(buffer);
 			UdpMsgPacket msgPacket = NetworkProtocol.getPacketfromBytes(buffer);
 			Debug.Log("Received: " + msgPacket.message);
+
 		}
 
 	}
@@ -221,6 +223,14 @@ public class NetworkClient
 		}
 	}
 
+	public void HandleUdpMessage(UdpMsgPacket packet)
+    {
+        if (packet.type == PacketType.GameState)
+        {
+			clientScript.HandleGameState(packet.gameState); 
+        }
+    }
+
 	private void HandleReject()
 	{
 		NetworkStream stream = client.GetStream();
@@ -244,6 +254,7 @@ public class NetworkClient
 		UdpMsgPacket packet = new UdpMsgPacket(PacketType.UDPConnect,"",msg.playerId,msg.team);
 		MyData.playerId = msg.playerId;
 		MyData.team = msg.team;
+		clientScript.HandlePlayerData();
 		SendPacket(packet);
     }
 
@@ -293,8 +304,34 @@ public class NetworkClient
 	private void HandlePlayerGameData(SimpleMessage msg)
     {
 		Debug.Log("Player Game Data Recieved");
-		Vector3 pos = new Vector3(msg.floatArrData[0],msg.floatArrData[1],msg.floatArrData[2]);
-		clientScript.CharacterSpwan(pos);
+        foreach(KeyValuePair<string,float[]> spawnData in msg.redSpanData)
+        {
+            if (MyData.playerId == spawnData.Key)
+            {
+				Vector3 pos = new Vector3(spawnData.Value[0], spawnData.Value[1], spawnData.Value[2]);
+				clientScript.MyCharacterSpwan(pos);
+			}
+            else
+            {
+				Vector3 pos = new Vector3(spawnData.Value[0], spawnData.Value[1], spawnData.Value[2]);
+				clientScript.OtherCharSpawn(spawnData.Key, "red", pos);
+				//clientScript.CharSpawn();
+			}
+        }
+		foreach (KeyValuePair<string, float[]> spawnData in msg.blueSpanData)
+		{
+			if (MyData.playerId == spawnData.Key)
+			{
+				Vector3 pos = new Vector3(spawnData.Value[0], spawnData.Value[1], spawnData.Value[2]);
+				clientScript.MyCharacterSpwan(pos);
+			}
+            else
+            {
+				Vector3 pos = new Vector3(spawnData.Value[0], spawnData.Value[1], spawnData.Value[2]);
+				clientScript.OtherCharSpawn(spawnData.Key, "blue", pos);
+				//clientScript.CharSpawn();
+			}
+		}
     } 
 
 	private void HandleServerTick(SimpleMessage msg)

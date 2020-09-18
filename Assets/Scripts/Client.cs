@@ -53,6 +53,11 @@ public class Client : MonoBehaviour
     [SerializeField]
     private GameObject character;
 
+    [SerializeField]
+    private GameObject blueCharPrefab;
+    [SerializeField]
+    private GameObject redCharPrefab;
+
     void Awake()
     {
         UnityInitializer.AttachToGameObject(this.gameObject);
@@ -263,7 +268,7 @@ public class Client : MonoBehaviour
         clientState.playerId = MyData.playerId;
         clientState.team = MyData.team;
         clientState.position = new float[3]{character.transform.position.x, character.transform.position.y, character.transform.position.z};
-        clientState.angle = new float[3] { character.transform.rotation.x, character.transform.rotation.y, character.transform.rotation.z };
+        clientState.angle = new float[3] { character.transform.rotation.eulerAngles.x, character.transform.rotation.eulerAngles.y, character.transform.rotation.eulerAngles.z };
         UdpMsgPacket packet = new UdpMsgPacket(PacketType.ClientState, "", MyData.playerId, MyData.team);
         packet.clientState = clientState;
         networkClient.SendPacket(packet);
@@ -304,6 +309,10 @@ public class Client : MonoBehaviour
         roomId = null;
     }
 
+    public void HandleGameState(GameState state)
+    {
+        
+    }
 
     //Remove Coroutines for functions below this after detailed matchmaking
     public void SetUpMaze(MazeCell[,] maze)
@@ -322,12 +331,39 @@ public class Client : MonoBehaviour
         mazeController.InstantiateMaze(maze);
     }
 
-    public void CharacterSpwan(Vector3 pos)
+    public void HandlePlayerData()
     {
-        StartCoroutine(CharSpawn(pos));
+        MyTeamData.teamName = MyData.team;
+        if (MyData.team == "red")
+        {
+            MyTeamData.charPrefab = redCharPrefab;
+            OppTeamData.charPrefab = blueCharPrefab;
+            Quaternion q1 = Quaternion.identity;
+            q1.eulerAngles = new Vector3(0, 0, 0);
+            MyTeamData.spwanDirection = q1;
+            Quaternion q2 = Quaternion.identity;
+            q2.eulerAngles = new Vector3(0, 180f, 0);
+            OppTeamData.spwanDirection = q2;
+        }
+        else
+        {
+            MyTeamData.charPrefab = blueCharPrefab;
+            OppTeamData.charPrefab = redCharPrefab;
+            Quaternion q1 = Quaternion.identity;
+            q1.eulerAngles = new Vector3(0, 180f, 0);
+            MyTeamData.spwanDirection = q1;
+            Quaternion q2 = Quaternion.identity;
+            q2.eulerAngles = new Vector3(0, 0, 0);
+            OppTeamData.spwanDirection = q2;
+        }
     }
 
-    IEnumerator CharSpawn(Vector3 pos)
+    public void MyCharacterSpwan(Vector3 pos)
+    {
+        StartCoroutine(MyCharSpawn(pos));
+    }
+
+    IEnumerator MyCharSpawn(Vector3 pos)
     {
         yield return new WaitForSeconds(0.5f);
 
@@ -335,5 +371,24 @@ public class Client : MonoBehaviour
         character.transform.position = pos;
     }
 
+    public void OtherCharSpawn(string id,string team,Vector3 pos)
+    {
+         StartCoroutine(CharSpawn(id,team,pos));
+    }
+
+    IEnumerator CharSpawn(string id,string team,Vector3 pos)
+    {
+        yield return new WaitForSeconds(0.5f);
+        if (team == MyTeamData.teamName)
+        {
+            GameObject tempObject = Instantiate(MyTeamData.charPrefab, pos, MyTeamData.spwanDirection);
+            MyTeamData.playerData.Add(id, tempObject);
+        }
+        else
+        {
+            GameObject tempObject= Instantiate(OppTeamData.charPrefab, pos, OppTeamData.spwanDirection);
+            OppTeamData.playerData.Add(id, tempObject);
+        }
+    }
     // End Function changes
 }
