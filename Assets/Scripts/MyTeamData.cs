@@ -9,4 +9,5 @@ public class MyTeamData
 
     public static GameObject charPrefab;
     public static Quaternion spwanDirection;
+
 }

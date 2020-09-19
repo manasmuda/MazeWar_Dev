@@ -311,7 +311,47 @@ public class Client : MonoBehaviour
 
     public void HandleGameState(GameState state)
     {
-        
+        if (MyTeamData.teamName == "blue")
+        {
+            for (int i = 0; i < state.blueTeamState.Count; i++)
+            {
+                string id = state.blueTeamState[i].playerId;
+                if (MyTeamData.playerData.ContainsKey(id))
+                {
+                    MyTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.blueTeamState[i]);
+                }
+                else
+                {
+
+                }
+            }
+            for (int i = 0; i < state.redTeamState.Count; i++)
+            {
+                string id = state.redTeamState[i].playerId;
+                OppTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.redTeamState[i]);
+            }
+        }
+        else
+        {
+            for(int i = 0; i < state.redTeamState.Count; i++)
+            {
+                string id = state.blueTeamState[i].playerId;
+                if (MyTeamData.playerData.ContainsKey(id))
+                {
+                    MyTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.redTeamState[i]);
+                }
+                else
+                {
+
+                }
+            }
+            for (int i = 0; i < state.blueTeamState.Count; i++)                                                           
+            {
+                string id = state.blueTeamState[i].playerId;
+                OppTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.blueTeamState[i]);
+            }
+        }
+
     }
 
     //Remove Coroutines for functions below this after detailed matchmaking
@@ -386,7 +426,7 @@ public class Client : MonoBehaviour
         }
         else
         {
-            GameObject tempObject= Instantiate(OppTeamData.charPrefab, pos, OppTeamData.spwanDirection);
+            GameObject tempObject = Instantiate(OppTeamData.charPrefab, pos, OppTeamData.spwanDirection);
             OppTeamData.playerData.Add(id, tempObject);
         }
     }
