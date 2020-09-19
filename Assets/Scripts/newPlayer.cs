@@ -74,7 +74,8 @@ public class newPlayer : MonoBehaviour
             playerController_instance = this;
 
         }
-        else {
+        else
+        {
             Destroy(gameObject);
         }
     }

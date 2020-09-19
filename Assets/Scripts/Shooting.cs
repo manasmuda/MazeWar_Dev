@@ -3,19 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Shooting : MonoBehaviour
 {
 
     public GameObject bulletPrefab;
     public Transform bulletSpawnPos,directionToGo;
     public ShooterButton shooterButton;
-
+  
     public float coolDownTime = 0.5f;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        shooterButton = FindObjectOfType<ShooterButton>();
     }
 
     // Update is called once per frame

@@ -1,31 +1,36 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-public class Health : MonoBehaviour
+using UnityEngine.UI;
+public class CharacterData : MonoBehaviour
 {
 
-    public int MaxHealth = 100;
-    public int CurrentHealth;
+    public float MaxHealth = 100;
+    public float CurrentHealth;
+    public float damageAmount =20 ;
 
+  public Slider healthSlider;
 
     void Start()
     {
+        
         CurrentHealth = MaxHealth; // Assigning the Variables
+        healthSlider.value = (CurrentHealth / MaxHealth);
+        
     }
 
     
     void Update()
     {
-        
+        healthSlider.transform.LookAt(Camera.main.transform);
     }
 
 
-    public void TakeDamage(int D_Amount)// Damaging the Player and can be used for Enemy as well
+    public void TakeDamage(float D_Amount)// Damaging the Player and can be used for Enemy as well
     {
         CurrentHealth -= D_Amount;
-        
-        if(CurrentHealth <= 0)
+        healthSlider.value = (CurrentHealth / MaxHealth);
+        if (CurrentHealth <= 0)
         {
             Die();
         }
@@ -45,7 +50,7 @@ public class Health : MonoBehaviour
 
     public void Die()// Killing Player
     {
-        Destroy(this.gameObject);
+       Destroy(this.gameObject);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)// You can change this to Trigger if you want
@@ -72,10 +77,21 @@ public class Health : MonoBehaviour
 
         if(collision.gameObject.tag =="Player")// Damage for Enemy by Player
         {
-            TakeDamage(50);
+            TakeDamage(20);
         }
         
 
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Bullet")
+        {
+
+            Debug.Log("Damaging the player");
+            TakeDamage(damageAmount);
+            //Destroy(other.gameObject, 0.5f);
+           
+        }
     }
 
 }
