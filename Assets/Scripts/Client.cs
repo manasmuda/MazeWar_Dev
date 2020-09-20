@@ -54,6 +54,9 @@ public class Client : MonoBehaviour
     private GameObject character;
 
     [SerializeField]
+    private GameObject mainCharPrefab;
+
+    [SerializeField]
     private GameObject blueCharPrefab;
     [SerializeField]
     private GameObject redCharPrefab;
@@ -195,8 +198,8 @@ public class Client : MonoBehaviour
         //playerSessionObj.IpAddress = "10.0.2.2";
         //#endif
         //#if UNITY_PLAYER
-        //playerSessionObj.IpAddress = "192.168.43.254";// ip address if using lan
-        playerSessionObj.IpAddress = "127.0.0.1";
+        playerSessionObj.IpAddress = "192.168.43.254";// ip address if using lan
+        //playerSessionObj.IpAddress = "127.0.0.1";
         //#endif
         playerSessionObj.Port = 1935;
         playerSessionObj.GameSessionId = "gsess-abc";
@@ -311,46 +314,55 @@ public class Client : MonoBehaviour
 
     public void HandleGameState(GameState state)
     {
-        if (MyTeamData.teamName == "blue")
+        Debug.Log("GameState handling started");
+        try
         {
-            for (int i = 0; i < state.blueTeamState.Count; i++)
+            if (MyTeamData.teamName == "blue")
             {
-                string id = state.blueTeamState[i].playerId;
-                if (MyTeamData.playerData.ContainsKey(id))
+                for (int i = 0; i < state.blueTeamState.Count; i++)
                 {
-                    MyTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.blueTeamState[i]);
-                }
-                else
-                {
+                    string id = state.blueTeamState[i].playerId;
+                    if (MyTeamData.playerData.ContainsKey(id))
+                    {
+                        MyTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.blueTeamState[i]);
+                    }
+                    else
+                    {
 
+                    }
+                }
+                for (int i = 0; i < state.redTeamState.Count; i++)
+                {
+                    string id = state.redTeamState[i].playerId;
+                    OppTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.redTeamState[i]);
                 }
             }
-            for (int i = 0; i < state.redTeamState.Count; i++)
+            else
             {
-                string id = state.redTeamState[i].playerId;
-                OppTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.redTeamState[i]);
+                for (int i = 0; i < state.redTeamState.Count; i++)
+                {
+                    string id = state.redTeamState[i].playerId;
+                    if (MyTeamData.playerData.ContainsKey(id))
+                    {
+                        MyTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.redTeamState[i]);
+                    }
+                    else
+                    {
+
+                    }
+                }
+                for (int i = 0; i < state.blueTeamState.Count; i++)
+                {
+                    string id = state.blueTeamState[i].playerId;
+                    OppTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.blueTeamState[i]);
+                }
             }
         }
-        else
+        catch(Exception e)
         {
-            for(int i = 0; i < state.redTeamState.Count; i++)
-            {
-                string id = state.blueTeamState[i].playerId;
-                if (MyTeamData.playerData.ContainsKey(id))
-                {
-                    MyTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.redTeamState[i]);
-                }
-                else
-                {
-
-                }
-            }
-            for (int i = 0; i < state.blueTeamState.Count; i++)                                                           
-            {
-                string id = state.blueTeamState[i].playerId;
-                OppTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.blueTeamState[i]);
-            }
+            Debug.Log(e);
         }
+        Debug.Log("Gamestate handling ended");
 
     }
 
@@ -407,8 +419,7 @@ public class Client : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f);
 
-        character = GameObject.Find("Character 1");
-        character.transform.position = pos;
+        character = Instantiate(mainCharPrefab, pos, MyTeamData.spwanDirection);
     }
 
     public void OtherCharSpawn(string id,string team,Vector3 pos)

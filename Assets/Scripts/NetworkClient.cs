@@ -59,13 +59,14 @@ public class NetworkClient
 
 		if (udpClient!=null && udpClient.Available != 0)
 		{
-			byte[] buffer = new byte[1280];
+			Debug.Log("Message Recieve Started");
+			byte[] buffer = new byte[12800];
 			udpClient.Receive(buffer);
 
 			//string data = Encoding.Default.GetString(buffer);
 			UdpMsgPacket msgPacket = NetworkProtocol.getPacketfromBytes(buffer);
 			Debug.Log("Received: " + msgPacket.message);
-
+			HandleUdpMessage(msgPacket);
 		}
 
 	}
@@ -225,7 +226,8 @@ public class NetworkClient
 
 	public void HandleUdpMessage(UdpMsgPacket packet)
     {
-        if (packet.type == PacketType.GameState)
+		Debug.Log("Packet received:" + packet.type);
+		if (packet.type == PacketType.GameState)
         {
 			clientScript.HandleGameState(packet.gameState); 
         }
@@ -252,6 +254,7 @@ public class NetworkClient
     {
 		Debug.Log("Recieved Player Data");
 		UdpMsgPacket packet = new UdpMsgPacket(PacketType.UDPConnect,"",msg.playerId,msg.team);
+		Debug.Log("Team: " + packet.team);
 		MyData.playerId = msg.playerId;
 		MyData.team = msg.team;
 		clientScript.HandlePlayerData();
