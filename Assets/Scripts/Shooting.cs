@@ -36,7 +36,7 @@ public class Shooting : MonoBehaviour
         coolDownTime -= Time.deltaTime;
     }
 
-    private void Shoot()
+    public void Shoot()
     {
         Debug.Log("Shooting");
 
