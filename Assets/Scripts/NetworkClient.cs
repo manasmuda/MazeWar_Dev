@@ -341,7 +341,9 @@ public class NetworkClient
     {
 		Debug.Log("Handle Server Tick");
 		int ms = DateTime.UtcNow.Millisecond;
+		
 		int dif = ms - msg.time;
+		Debug.Log(dif);
 		int tt = dif / 200;
 		int ttc = dif % 200;
 		float ttcf = ((float)ttc) / 1000f;

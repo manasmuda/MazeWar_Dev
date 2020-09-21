@@ -45,6 +45,10 @@ public class CharacterSyncScript : MonoBehaviour
                 }*/
                 IEnumerator newMover = MoveOverSpeed(end,fang);
                 movers.Enqueue(newMover);
+                if (movers.Count > 10)
+                {
+                    TransportPlayer(end,fang);
+                }
                 lastPos = new Vector3(end.x, end.y, end.z);
                 lastY = fang.y;
                 if (!isMoving && movers.Count > 0)
@@ -55,7 +59,7 @@ public class CharacterSyncScript : MonoBehaviour
             }
             else if (dist >= 5)
             {
-                TransportPlayer(end);
+                TransportPlayer(end,fang);
             }
     }
 
@@ -88,11 +92,14 @@ public class CharacterSyncScript : MonoBehaviour
         }
     }
 
-    public void TransportPlayer(Vector3 end)
+    public void TransportPlayer(Vector3 end,Vector3 fang)
     {
         Debug.Log("Transported");
         movers.Clear();
         transform.position = end;
+        Quaternion q = new Quaternion();
+        q.eulerAngles = fang;
+        transform.rotation = q;
         isMoving = false;
         lastPos = end;
     }
