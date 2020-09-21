@@ -6,6 +6,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
+using System.Threading;
 
 // *** NETWORK CLIENT FOR TCP CONNECTIONS WITH THE SERVER ***
 
@@ -57,7 +58,14 @@ public class NetworkClient
 			HandleMessage(msg);
 		}
 
-		if (udpClient!=null && udpClient.Available != 0)
+		
+
+
+	}
+
+	public void RecieveUdp()
+    {
+		if (udpClient != null && udpClient.Available != 0)
 		{
 			Debug.Log("Message Recieve Started");
 			byte[] buffer = new byte[12800];
@@ -70,6 +78,10 @@ public class NetworkClient
 		}
 
 	}
+
+	
+
+
 
 	private bool TryConnect()
 	{

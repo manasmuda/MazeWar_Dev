@@ -216,6 +216,7 @@ public class Client : MonoBehaviour
         if (connectionSuccess)
         {
             // Only send updates 5 times per second to avoid flooding server with messages
+            networkClient.RecieveUdp();
             this.tickCounter += Time.deltaTime;
             if (this.tickCounter < 0.2f)
             {
