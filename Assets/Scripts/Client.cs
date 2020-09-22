@@ -53,6 +53,8 @@ public class Client : MonoBehaviour
     [SerializeField]
     private GameObject character;
 
+    public GameObject coinPrefab;
+
     void Awake()
     {
         UnityInitializer.AttachToGameObject(this.gameObject);
@@ -319,6 +321,24 @@ public class Client : MonoBehaviour
         mazeController = MCO.GetComponent<MazeController>();
         Debug.Log(mazeController);
         mazeController.InstantiateMaze(maze);
+    }
+
+    public void SetUpCoins(Vector3[] _coinPos)
+    {
+        StartCoroutine(SetCoins(_coinPos));
+    }
+
+    IEnumerator SetCoins(Vector3[] _coinPos)
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        GameObject coinParent = new GameObject("CoinsParent");
+
+        for(int i =0; i< _coinPos.Length;i++)
+        {
+            Instantiate(coinPrefab, _coinPos[i], Quaternion.identity, coinParent.transform);
+        }
+
     }
 
     public void CharacterSpwan(Vector3 pos)

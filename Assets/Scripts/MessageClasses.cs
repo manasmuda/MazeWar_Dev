@@ -42,6 +42,8 @@ public class SimpleMessage
     public string playerId { get; set; }
     public string team { get; set; }
     public List<object> listData { get; set; }
+
+    public List<object> list1 { get; set; }
     public Dictionary<string, object> dictData { get; set; }
     public List<Dictionary<string, object>> listdictdata { get; set; }
     public byte[] imageData { get; set; }
