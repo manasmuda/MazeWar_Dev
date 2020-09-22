@@ -50,31 +50,25 @@ public class player_Animations : MonoBehaviour
     {
 
         if (_shooterButton.pressed && newPlayer.playerController_instance.moveInput.x == 0f && newPlayer.playerController_instance.moveInput.y == 0f)
-        {
-           
+        { 
             char_anim.SetBool("isShooting", true);
-
         }
         else
-        {
-           
+        {        
             char_anim.SetBool("isShooting", false);
         }
 
     }
 
     void Walking(float X, float Y)
-    {
-      
+    { 
         char_anim.SetFloat("MoveX", X);
         char_anim.SetFloat("MoveY", Y);
     }
 
     void Crouching(float X, float Y)
-    {
-       
+    { 
         char_anim.SetFloat("CrouchX", X);
-        char_anim.SetFloat("CrouchY", Y);
-        
+        char_anim.SetFloat("CrouchY", Y);  
     }
 }

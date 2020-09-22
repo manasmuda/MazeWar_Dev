@@ -10,7 +10,7 @@ public class ShooterButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
     public bool pressed = false;
     public int hitTimes = -1; // bullet is shot for every time hitTime is 0
 
-    public ParticleSystem muzzleFlash;
+   
     
     // Start is called before the first frame update
     void Start()
@@ -38,15 +38,12 @@ public class ShooterButton : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        pressed = true;
-        muzzleFlash.Play();
-       
+        pressed = true;  
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        pressed = false;
-        muzzleFlash.Stop();
+        pressed = false;  
     }
   
 }

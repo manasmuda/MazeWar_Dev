@@ -10,15 +10,22 @@ public class CharacterSyncScript : MonoBehaviour
     public int count;
 
     public bool isMoving = false;
+    [SerializeField]
+    public bool crouching = false;
+
 
     public Vector3 lastPos;
+    public Vector3 Direction;
     public float lastY;
+
+    public Animator anim;
 
     // Start is called before the first frame update
     void Start()
     {
         lastPos = transform.position;
         lastY = transform.rotation.eulerAngles.y;
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -71,6 +78,24 @@ public class CharacterSyncScript : MonoBehaviour
         {
             Debug.Log(transform.position.z+","+end.z);
             transform.position = Vector3.MoveTowards(transform.position, end, speed * Time.deltaTime);
+
+
+             Direction = (end - transform.position).normalized;
+           
+
+            if (switchToCrouching(crouching))
+            {
+                Crouching(Direction.x, Direction.y);
+            }
+            else {
+                Walking(Direction.x, Direction.y);
+            }
+            
+                
+            
+
+
+
             yield return new WaitForEndOfFrame();
         }
         Quaternion q = new Quaternion();
@@ -95,5 +120,32 @@ public class CharacterSyncScript : MonoBehaviour
         transform.position = end;
         isMoving = false;
         lastPos = end;
+    }
+
+
+
+    void Walking(float X, float Y)
+    {
+      
+        anim.SetFloat("MoveX", X);
+        anim.SetFloat("MoveY", Y);
+    }
+
+    void Crouching(float X, float Y)
+    {
+       
+        anim.SetFloat("CrouchX", X);
+        anim.SetFloat("CrouchY", Y);
+
+    }
+    private bool switchToCrouching( bool Crouch)
+    {
+       
+        if (Crouch == true)
+        {
+            return true;
+            
+        }
+        return false;
     }
 }
