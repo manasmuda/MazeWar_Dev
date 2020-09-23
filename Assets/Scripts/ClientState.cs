@@ -12,6 +12,8 @@ public class ClientState
     public float[] position = new float[3];
     public float[] angle = new float[3];
 
+    public bool crouch;
+
     public String name;
     public int health;
     public int coinsHolding;
