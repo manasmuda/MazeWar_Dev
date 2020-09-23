@@ -10,8 +10,7 @@ public class CharacterSyncScript : MonoBehaviour
     public int count;
 
     public bool isMoving = false;
-    [SerializeField]
-    public bool crouching = false;
+  
 
 
     public Vector3 lastPos;
@@ -71,33 +70,37 @@ public class CharacterSyncScript : MonoBehaviour
 
     }
 
-    public IEnumerator MoveOverSpeed(Vector3 end,Vector3 fang, float speed=200)
+    public IEnumerator MoveOverSpeed(Vector3 end,Vector3 fang, float speed=200 , bool isCrouched =false )
     {
         // speed should be 1 unit per second
+      
         while (transform.position != end)
         {
             Debug.Log(transform.position.z+","+end.z);
             transform.position = Vector3.MoveTowards(transform.position, end, speed * Time.deltaTime);
 
-
-             Direction = (end - transform.position).normalized;
-           
-
-            if (switchToCrouching(crouching))
-            {
-                Crouching(Direction.x, Direction.z);
-            }
-            else {
-                Walking(Direction.x, Direction.z);
-            }
-            
-                
-            
-
-
-
             yield return new WaitForEndOfFrame();
         }
+
+        Direction = (end - transform.position).normalized;
+
+       // if ()
+        {//this if condition we have to get the current value of bool, whether the state is true or false
+            // this isCrouched variable is like toggle funtion here.
+            isCrouched = !isCrouched;
+        }
+      
+      
+        if (isCrouched==true)
+        {       
+            Crouching(Direction.x, Direction.z);
+        }
+        else
+        {
+            Walking(Direction.x, Direction.z);
+        }
+
+
         Quaternion q = new Quaternion();
         q.eulerAngles = fang;
         transform.rotation = q;
@@ -133,19 +136,10 @@ public class CharacterSyncScript : MonoBehaviour
 
     void Crouching(float X, float Y)
     {
-       
+
         anim.SetFloat("CrouchX", X);
         anim.SetFloat("CrouchY", Y);
 
     }
-    private bool switchToCrouching( bool Crouch)
-    {
-       
-        if (Crouch == true)
-        {
-            return true;
-            
-        }
-        return false;
-    }
+  
 }
