@@ -517,11 +517,13 @@ MonoBehaviour:
   roomId: 
   mazeController: {fileID: 0}
   character: {fileID: 0}
-  mainCharPrefab: {fileID: 2310303988653259434, guid: caec77281571d0442a6a147b7b72f43b,
+  coinPrefab: {fileID: 2645964641769743038, guid: 166f6656dec8c1f4d96eaaf1f259691e,
     type: 3}
-  blueCharPrefab: {fileID: 3461098767901408615, guid: fbda43191b6bba14d947bf8af8e889e4,
+  mainCharPrefab: {fileID: 2514212490502318228, guid: caec77281571d0442a6a147b7b72f43b,
     type: 3}
-  redCharPrefab: {fileID: 3461098767901408615, guid: fbda43191b6bba14d947bf8af8e889e4,
+  blueCharPrefab: {fileID: 6596069339946972799, guid: b9e28ea3f94ef8a41884ac86f209472a,
+    type: 3}
+  redCharPrefab: {fileID: 6596069339946972799, guid: b9e28ea3f94ef8a41884ac86f209472a,
     type: 3}
 --- !u!4 &464187047
 Transform:
