@@ -53,7 +53,16 @@ public class Client : MonoBehaviour
     [SerializeField]
     private GameObject character;
 
+
     public GameObject coinPrefab;
+
+    [SerializeField]
+    private GameObject mainCharPrefab;
+
+    [SerializeField]
+    private GameObject blueCharPrefab;
+    [SerializeField]
+    private GameObject redCharPrefab;
 
     void Awake()
     {
@@ -188,12 +197,13 @@ public class Client : MonoBehaviour
     public void ConnectWithPlayerId(string playerIdx)
     {
         playerSessionObj = new PlayerSessionObject();
-//#if UNITY_ANDROID
+        //#if UNITY_ANDROID
         //playerSessionObj.IpAddress = "10.0.2.2";
-//#endif
-//#if UNITY_PLAYER
-        playerSessionObj.IpAddress = "127.0.0.1";
-//#endif
+        //#endif
+        //#if UNITY_PLAYER
+        playerSessionObj.IpAddress = "192.168.43.254";// ip address if using lan
+        //playerSessionObj.IpAddress = "127.0.0.1";
+        //#endif
         playerSessionObj.Port = 1935;
         playerSessionObj.GameSessionId = "gsess-abc";
         playerSessionObj.PlayerSessionId = playerIdx;
@@ -209,6 +219,7 @@ public class Client : MonoBehaviour
         if (connectionSuccess)
         {
             // Only send updates 5 times per second to avoid flooding server with messages
+            networkClient.RecieveUdp();
             this.tickCounter += Time.deltaTime;
             if (this.tickCounter < 0.2f)
             {
@@ -264,7 +275,7 @@ public class Client : MonoBehaviour
         clientState.playerId = MyData.playerId;
         clientState.team = MyData.team;
         clientState.position = new float[3]{character.transform.position.x, character.transform.position.y, character.transform.position.z};
-        clientState.angle = new float[3] { character.transform.rotation.x, character.transform.rotation.y, character.transform.rotation.z };
+        clientState.angle = new float[3] { character.transform.rotation.eulerAngles.x, character.transform.rotation.eulerAngles.y, character.transform.rotation.eulerAngles.z };
         UdpMsgPacket packet = new UdpMsgPacket(PacketType.ClientState, "", MyData.playerId, MyData.team);
         packet.clientState = clientState;
         networkClient.SendPacket(packet);
@@ -305,6 +316,59 @@ public class Client : MonoBehaviour
         roomId = null;
     }
 
+    public void HandleGameState(GameState state)
+    {
+        Debug.Log("GameState handling started");
+        try
+        {
+            if (MyTeamData.teamName == "blue")
+            {
+                for (int i = 0; i < state.blueTeamState.Count; i++)
+                {
+                    string id = state.blueTeamState[i].playerId;
+                    if (MyTeamData.playerData.ContainsKey(id))
+                    {
+                        MyTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.blueTeamState[i]);
+                    }
+                    else
+                    {
+
+                    }
+                }
+                for (int i = 0; i < state.redTeamState.Count; i++)
+                {
+                    string id = state.redTeamState[i].playerId;
+                    OppTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.redTeamState[i]);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < state.redTeamState.Count; i++)
+                {
+                    string id = state.redTeamState[i].playerId;
+                    if (MyTeamData.playerData.ContainsKey(id))
+                    {
+                        MyTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.redTeamState[i]);
+                    }
+                    else
+                    {
+
+                    }
+                }
+                for (int i = 0; i < state.blueTeamState.Count; i++)
+                {
+                    string id = state.blueTeamState[i].playerId;
+                    OppTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.blueTeamState[i]);
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            Debug.Log(e);
+        }
+        Debug.Log("Gamestate handling ended");
+
+    }
 
     //Remove Coroutines for functions below this after detailed matchmaking
     public void SetUpMaze(MazeCell[,] maze)
@@ -341,18 +405,64 @@ public class Client : MonoBehaviour
 
     }
 
-    public void CharacterSpwan(Vector3 pos)
+
+    public void HandlePlayerData()
     {
-        StartCoroutine(CharSpawn(pos));
+        MyTeamData.teamName = MyData.team;
+        if (MyData.team == "red")
+        {
+            MyTeamData.charPrefab = redCharPrefab;
+            OppTeamData.charPrefab = blueCharPrefab;
+            Quaternion q1 = Quaternion.identity;
+            q1.eulerAngles = new Vector3(0, 180f, 0);
+            MyTeamData.spwanDirection = q1;
+            Quaternion q2 = Quaternion.identity;
+            q2.eulerAngles = new Vector3(0, 0, 0);
+            OppTeamData.spwanDirection = q2;
+        }
+        else
+        {
+            MyTeamData.charPrefab = blueCharPrefab;
+            OppTeamData.charPrefab = redCharPrefab;
+            Quaternion q1 = Quaternion.identity;
+            q1.eulerAngles = new Vector3(0, 0, 0);
+            MyTeamData.spwanDirection = q1;
+            Quaternion q2 = Quaternion.identity;
+            q2.eulerAngles = new Vector3(0, 180f, 0);
+            OppTeamData.spwanDirection = q2;
+        }
     }
 
-    IEnumerator CharSpawn(Vector3 pos)
+    public void MyCharacterSpwan(Vector3 pos)
+    {
+        StartCoroutine(MyCharSpawn(pos));
+    }
+
+    IEnumerator MyCharSpawn(Vector3 pos)
     {
         yield return new WaitForSeconds(0.5f);
 
-        character = GameObject.Find("Character 1");
-        character.transform.position = pos;
+        character = Instantiate(mainCharPrefab, pos, MyTeamData.spwanDirection);
     }
 
+    public void OtherCharSpawn(string id,string team,Vector3 pos)
+    {
+         StartCoroutine(CharSpawn(id,team,pos));
+    }
+
+    IEnumerator CharSpawn(string id,string team,Vector3 pos)
+    {
+        yield return new WaitForSeconds(0.5f);
+        if (team == MyTeamData.teamName)
+        {
+            GameObject tempObject = Instantiate(MyTeamData.charPrefab, pos, MyTeamData.spwanDirection);
+            MyTeamData.playerData.Add(id, tempObject);
+        }
+        else
+        {
+            GameObject tempObject = Instantiate(OppTeamData.charPrefab, pos, OppTeamData.spwanDirection);
+            OppTeamData.playerData.Add(id, tempObject);
+        }
+    }
     // End Function changes
 }

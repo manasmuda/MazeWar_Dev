@@ -5,6 +5,8 @@ using System.Text;
 using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using System.Threading;
 
 // *** NETWORK CLIENT FOR TCP CONNECTIONS WITH THE SERVER ***
 
@@ -56,17 +58,30 @@ public class NetworkClient
 			HandleMessage(msg);
 		}
 
-		if (udpClient!=null && udpClient.Available != 0)
+		
+
+
+	}
+
+	public void RecieveUdp()
+    {
+		if (udpClient != null && udpClient.Available != 0)
 		{
-			byte[] buffer = new byte[1280];
+			Debug.Log("Message Recieve Started");
+			byte[] buffer = new byte[12800];
 			udpClient.Receive(buffer);
 
 			//string data = Encoding.Default.GetString(buffer);
 			UdpMsgPacket msgPacket = NetworkProtocol.getPacketfromBytes(buffer);
 			Debug.Log("Received: " + msgPacket.message);
+			HandleUdpMessage(msgPacket);
 		}
 
 	}
+
+	
+
+
 
 	private bool TryConnect()
 	{
@@ -78,7 +93,7 @@ public class NetworkClient
             client.NoDelay = true; // Use No Delay to send small messages immediately. UDP should be used for even faster messaging
 			Debug.Log("Done");
 
-			endPoint = new IPEndPoint(IPAddress.Parse(this.playerSessionObject.IpAddress), this.playerSessionObject.Port);
+			endPoint = new IPEndPoint(IPAddress.Parse(this.playerSessionObject.IpAddress), this.playerSessionObject.Port+20);
 			udpClient = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 			udpClient.Blocking = false;
 			Debug.Log("UdpClient Created");
@@ -221,6 +236,15 @@ public class NetworkClient
 		}
 	}
 
+	public void HandleUdpMessage(UdpMsgPacket packet)
+    {
+		Debug.Log("Packet received:" + packet.type);
+		if (packet.type == PacketType.GameState)
+        {
+			clientScript.HandleGameState(packet.gameState); 
+        }
+    }
+
 	private void HandleReject()
 	{
 		NetworkStream stream = client.GetStream();
@@ -242,8 +266,10 @@ public class NetworkClient
     {
 		Debug.Log("Recieved Player Data");
 		UdpMsgPacket packet = new UdpMsgPacket(PacketType.UDPConnect,"",msg.playerId,msg.team);
+		Debug.Log("Team: " + packet.team);
 		MyData.playerId = msg.playerId;
 		MyData.team = msg.team;
+		clientScript.HandlePlayerData();
 		SendPacket(packet);
     }
 
@@ -294,15 +320,43 @@ public class NetworkClient
 	private void HandlePlayerGameData(SimpleMessage msg)
     {
 		Debug.Log("Player Game Data Recieved");
-		Vector3 pos = new Vector3(msg.floatArrData[0],msg.floatArrData[1],msg.floatArrData[2]);
-		clientScript.CharacterSpwan(pos);
+        foreach(KeyValuePair<string,float[]> spawnData in msg.redSpanData)
+        {
+            if (MyData.playerId == spawnData.Key)
+            {
+				Vector3 pos = new Vector3(spawnData.Value[0], spawnData.Value[1], spawnData.Value[2]);
+				clientScript.MyCharacterSpwan(pos);
+			}
+            else
+            {
+				Vector3 pos = new Vector3(spawnData.Value[0], spawnData.Value[1], spawnData.Value[2]);
+				clientScript.OtherCharSpawn(spawnData.Key, "red", pos);
+				//clientScript.CharSpawn();
+			}
+        }
+		foreach (KeyValuePair<string, float[]> spawnData in msg.blueSpanData)
+		{
+			if (MyData.playerId == spawnData.Key)
+			{
+				Vector3 pos = new Vector3(spawnData.Value[0], spawnData.Value[1], spawnData.Value[2]);
+				clientScript.MyCharacterSpwan(pos);
+			}
+            else
+            {
+				Vector3 pos = new Vector3(spawnData.Value[0], spawnData.Value[1], spawnData.Value[2]);
+				clientScript.OtherCharSpawn(spawnData.Key, "blue", pos);
+				//clientScript.CharSpawn();
+			}
+		}
     } 
 
 	private void HandleServerTick(SimpleMessage msg)
     {
 		Debug.Log("Handle Server Tick");
 		int ms = DateTime.UtcNow.Millisecond;
+		
 		int dif = ms - msg.time;
+		Debug.Log(dif);
 		int tt = dif / 200;
 		int ttc = dif % 200;
 		float ttcf = ((float)ttc) / 1000f;
