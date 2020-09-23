@@ -85,10 +85,10 @@ public class CharacterSyncScript : MonoBehaviour
 
             if (switchToCrouching(crouching))
             {
-                Crouching(Direction.x, Direction.y);
+                Crouching(Direction.x, Direction.z);
             }
             else {
-                Walking(Direction.x, Direction.y);
+                Walking(Direction.x, Direction.z);
             }
             
                 

@@ -14,11 +14,13 @@ public class Shooting : MonoBehaviour
 
   
     public float coolDownTime = 0.5f;
+    private float _coolDownTime;
     public float bulletForce = 100f;
 
     // Start is called before the first frame update
     void Start()
     {
+        _coolDownTime = coolDownTime;
         shooterButton = FindObjectOfType<ShooterButton>();
     }
 
@@ -26,29 +28,16 @@ public class Shooting : MonoBehaviour
     void Update()
 
     {
-        if (shooterButton.pressed && newPlayer.playerController_instance.moveInput.x != 0 && newPlayer.playerController_instance.moveInput.y != 0)
+        if (shooterButton.pressed && newPlayer.playerController_instance.moveInput.x != 0 && newPlayer.playerController_instance.moveInput.y != 0|| crouch_Button.instance.isCrouched)
         {
             //if the player not moving and standing for shoot
             if (coolDownTime <= 0f)
             {
-                coolDownTime = 0.5f;
-                Shoot();
-               
+                coolDownTime = _coolDownTime;
+                Shoot();             
             }
-
-
         }
-        else if (crouch_Button.instance.isCrouched && newPlayer.playerController_instance.moveInput.x == 0 && newPlayer.playerController_instance.moveInput.y == 0)
-        {
-            // if the player not moving and crouched
-            if (coolDownTime <= 0f)
-            {
-                coolDownTime = 0.5f;
-                Shoot();
-               
-            }
-
-        }
+        
         coolDownTime -= Time.deltaTime;
       
     }
