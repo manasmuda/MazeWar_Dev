@@ -53,6 +53,9 @@ public class Client : MonoBehaviour
     [SerializeField]
     private GameObject character;
 
+
+    public GameObject coinPrefab;
+
     [SerializeField]
     private GameObject mainCharPrefab;
 
@@ -384,6 +387,25 @@ public class Client : MonoBehaviour
         mazeController.InstantiateMaze(maze);
     }
 
+    public void SetUpCoins(Vector3[] _coinPos)
+    {
+        StartCoroutine(SetCoins(_coinPos));
+    }
+
+    IEnumerator SetCoins(Vector3[] _coinPos)
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        GameObject coinParent = new GameObject("CoinsParent");
+
+        for(int i =0; i< _coinPos.Length;i++)
+        {
+            Instantiate(coinPrefab, _coinPos[i], Quaternion.identity, coinParent.transform);
+        }
+
+    }
+
+
     public void HandlePlayerData()
     {
         MyTeamData.teamName = MyData.team;
@@ -392,10 +414,10 @@ public class Client : MonoBehaviour
             MyTeamData.charPrefab = redCharPrefab;
             OppTeamData.charPrefab = blueCharPrefab;
             Quaternion q1 = Quaternion.identity;
-            q1.eulerAngles = new Vector3(0, 0, 0);
+            q1.eulerAngles = new Vector3(0, 180f, 0);
             MyTeamData.spwanDirection = q1;
             Quaternion q2 = Quaternion.identity;
-            q2.eulerAngles = new Vector3(0, 180f, 0);
+            q2.eulerAngles = new Vector3(0, 0, 0);
             OppTeamData.spwanDirection = q2;
         }
         else
@@ -403,10 +425,10 @@ public class Client : MonoBehaviour
             MyTeamData.charPrefab = blueCharPrefab;
             OppTeamData.charPrefab = redCharPrefab;
             Quaternion q1 = Quaternion.identity;
-            q1.eulerAngles = new Vector3(0, 180f, 0);
+            q1.eulerAngles = new Vector3(0, 0, 0);
             MyTeamData.spwanDirection = q1;
             Quaternion q2 = Quaternion.identity;
-            q2.eulerAngles = new Vector3(0, 0, 0);
+            q2.eulerAngles = new Vector3(0, 180f, 0);
             OppTeamData.spwanDirection = q2;
         }
     }

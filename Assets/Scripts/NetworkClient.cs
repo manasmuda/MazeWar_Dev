@@ -301,7 +301,8 @@ public class NetworkClient
 		clientScript.GameReady(dif);
 		MazeCell[,] maze=MazeConvertor.ToMazeArray(msg.listData);
 		clientScript.SetUpMaze(maze);
-		//
+		//instantiate coins
+		clientScript.SetUpCoins(Converter.ToArray(msg.list1));
 	}
 
 	private void HandleGameStarted(SimpleMessage msg)
