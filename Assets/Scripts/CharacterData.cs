@@ -7,7 +7,7 @@ public class CharacterData : MonoBehaviour
 
     public float MaxHealth = 100;
     public float CurrentHealth;
-    public float damageAmount =20 ;
+    public float damageAmount =20;
 
   public Slider healthSlider;
 

@@ -20,6 +20,7 @@ public class crouch_Button : MonoBehaviour, IPointerClickHandler
             instance = this;
         }
         else {
+
             Destroy(gameObject);
         }
 

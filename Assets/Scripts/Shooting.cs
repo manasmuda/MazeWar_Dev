@@ -10,12 +10,17 @@ public class Shooting : MonoBehaviour
     public GameObject bulletPrefab;
     public Transform bulletSpawnPos,directionToGo;
     public ShooterButton shooterButton;
+    public ParticleSystem muzzleFlash;
+
   
     public float coolDownTime = 0.5f;
+    private float _coolDownTime;
+    public float bulletForce = 100f;
 
     // Start is called before the first frame update
     void Start()
     {
+        _coolDownTime = coolDownTime;
         shooterButton = FindObjectOfType<ShooterButton>();
     }
 
@@ -23,29 +28,34 @@ public class Shooting : MonoBehaviour
     void Update()
 
     {
-        if (shooterButton.pressed)
+        if (shooterButton.pressed && newPlayer.playerController_instance.moveInput.x != 0 && newPlayer.playerController_instance.moveInput.y != 0|| crouch_Button.instance.isCrouched)
         {
+            //if the player not moving and standing for shoot
             if (coolDownTime <= 0f)
             {
-                coolDownTime = 0.5f;
-                Shoot();
+                coolDownTime = _coolDownTime;
+                Shoot();             
             }
-           
-           
         }
+        
         coolDownTime -= Time.deltaTime;
+      
     }
 
-    private void Shoot()
+    public void Shoot()
     {
         Debug.Log("Shooting");
+        if (shooterButton.pressed)
+        {
+           
+            GameObject temp = Instantiate(bulletPrefab, bulletSpawnPos.position, Quaternion.identity);
+            temp.AddComponent<Rigidbody>();
+            temp.GetComponent<Rigidbody>().AddForce(directionToGo.forward * bulletForce, ForceMode.Impulse);
+            muzzleFlash.Play();
+            Destroy(temp, 5f);
+        }
 
-        GameObject temp = Instantiate(bulletPrefab, bulletSpawnPos.position, Quaternion.identity);
 
-        temp.AddComponent<Rigidbody>();
-
-        temp.GetComponent<Rigidbody>().AddForce(directionToGo.forward * 100f, ForceMode.Impulse);
-
-        Destroy(temp, 5f);
     }
+        
 }
