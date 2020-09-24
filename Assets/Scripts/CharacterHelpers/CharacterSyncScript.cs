@@ -38,7 +38,7 @@ public class CharacterSyncScript : MonoBehaviour
         AddNewMove(new Vector3(state.position[0], state.position[1], state.position[2]), new Vector3(state.angle[0], state.angle[1], state.angle[2]));
         if (state.crouch)
         {
-            if (!inCrouch)
+            if(!inCrouch)
             {
                 inCrouch = true;
                 anim.SetBool("isCrouching", true);
@@ -46,7 +46,7 @@ public class CharacterSyncScript : MonoBehaviour
         }
         else
         {
-            if (inCrouch)
+            if(inCrouch)
             {
                 inCrouch = false;
                 anim.SetBool("isCrouching", false);
@@ -67,10 +67,10 @@ public class CharacterSyncScript : MonoBehaviour
                 }*/
                 IEnumerator newMover = MoveOverSpeed(end,fang);
                 movers.Enqueue(newMover);
-                if (movers.Count > 10)
+                /*if (movers.Count > 10)
                 {
                     TransportPlayer(end,fang);
-                }
+                }*/
                 lastPos = new Vector3(end.x, end.y, end.z);
                 lastY = fang.y;
                 if (!isMoving && movers.Count > 0)
@@ -121,10 +121,6 @@ public class CharacterSyncScript : MonoBehaviour
 
             yield return new WaitForEndOfFrame();
         }
-
-        
-
-
         
         if (movers.Count > 0)
         {
