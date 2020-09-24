@@ -28,7 +28,7 @@ public class Shooting : MonoBehaviour
     void Update()
 
     {
-        if (shooterButton.pressed && newPlayer.playerController_instance.moveInput.x != 0 && newPlayer.playerController_instance.moveInput.y != 0|| crouch_Button.instance.isCrouched)
+        if (shooterButton.pressed)
         {
             //if the player not moving and standing for shoot
             if (coolDownTime <= 0f)
@@ -47,8 +47,7 @@ public class Shooting : MonoBehaviour
         Debug.Log("Shooting");
         if (shooterButton.pressed)
         {
-           
-            GameObject temp = Instantiate(bulletPrefab, bulletSpawnPos.position, Quaternion.identity);
+           GameObject temp = Instantiate(bulletPrefab, bulletSpawnPos.position, Quaternion.identity);
             temp.AddComponent<Rigidbody>();
             temp.GetComponent<Rigidbody>().AddForce(directionToGo.forward * bulletForce, ForceMode.Impulse);
             muzzleFlash.Play();
@@ -57,5 +56,6 @@ public class Shooting : MonoBehaviour
 
 
     }
+   
         
 }

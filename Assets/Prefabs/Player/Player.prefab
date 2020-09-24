@@ -756,7 +756,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!114 &2514212490502318441
 MonoBehaviour:
@@ -771,6 +771,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Mode: 1
+  shooterButton: {fileID: 0}
   fpCameraTransform: {fileID: 9002151658353872749}
   cameraPole: {fileID: 9002151656868091474}
   tpCamTransform: {fileID: 9002151658225561762}
@@ -826,13 +827,19 @@ Animator:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2514212490502318228}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
+  m_Avatar: {fileID: 9000000, guid: ad1a85586c47d304ab830fe7584c47db, type: 3}
   m_Controller: {fileID: 9100000, guid: f76d76e19d6187c448ead78185d74592, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:RightFoot'\n\tTransform
+    'mixamorig:LeftLeg'\n\tTransform 'mixamorig:LeftHand'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform
+    'mixamorig:Spine1'\n\tTransform 'mixamorig:Spine2'\n\tTransform 'mixamorig:RightHandPinky3'\n\tTransform
+    'mixamorig:RightHandPinky1'\n\tTransform 'mixamorig:RightUpLeg'\n\tand more ...\n\tFrom
+    animation clip 'Armature_Shooting'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
