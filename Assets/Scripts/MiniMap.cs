@@ -7,6 +7,7 @@ public class MiniMap : MonoBehaviour
 
     public Transform player;
     public GameObject PointerPrefab;
+    public float minX, maxX, minZ, maxZ;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,12 +35,12 @@ public class MiniMap : MonoBehaviour
         Vector3 _pointerPosition = player.position;
         _pointerPosition.y = player.position.y + 6f;
         PointerPrefab.transform.position = _pointerPosition;
-      
 
-        // pointer moving along the player
-        Vector3 newPos = player.position;
-        newPos.y = transform.position.y;
-        transform.position = newPos;
-
+       
+            // Mini-Map camera moving along the player
+            Vector3 newPos = player.position;
+            newPos.y = transform.position.y;
+            transform.position = new Vector3(Mathf.Clamp(newPos.x,minX,maxX),newPos.y,Mathf.Clamp(newPos.z,minZ,maxZ));
+               
     }
 }

@@ -10,9 +10,13 @@ public class Shooting : MonoBehaviour
     public GameObject bulletPrefab;
     public Transform bulletSpawnPos,directionToGo;
     public ShooterButton shooterButton;
-    public ParticleSystem muzzleFlash;
 
-  
+    [Header("Muzzle Flash")]
+    public GameObject muzzleFlashPrefab;
+    public Transform muzzleFlashSpawnPoint;
+
+
+  [Header("Bullet Spawning Time")]
     public float coolDownTime = 0.5f;
     private float _coolDownTime;
     public float bulletForce = 100f;
@@ -50,7 +54,8 @@ public class Shooting : MonoBehaviour
            GameObject temp = Instantiate(bulletPrefab, bulletSpawnPos.position, Quaternion.identity);
             temp.AddComponent<Rigidbody>();
             temp.GetComponent<Rigidbody>().AddForce(directionToGo.forward * bulletForce, ForceMode.Impulse);
-            muzzleFlash.Play();
+            GameObject _muzzleflash = Instantiate(muzzleFlashPrefab, muzzleFlashSpawnPoint.position, Quaternion.Euler(0f, -90f, 0f));
+            Destroy(_muzzleflash, 2f);
             Destroy(temp, 5f);
         }
 
