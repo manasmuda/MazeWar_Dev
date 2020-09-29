@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,14 +10,12 @@ public class CharacterData : MonoBehaviour
     public float CurrentHealth;
     public float damageAmount =20;
 
-  public Slider healthSlider;
+    public Slider healthSlider;
 
     void Start()
     {
-        
         CurrentHealth = MaxHealth; // Assigning the Variables
         healthSlider.value = (CurrentHealth / MaxHealth);
-        
     }
 
     
@@ -53,6 +52,24 @@ public class CharacterData : MonoBehaviour
        Destroy(this.gameObject);
     }
 
+    public void NewPlayerState(ClientState state)
+    {
+        SyncHealth(state.health);
+    }
+
+    public void SyncHealth(int health)
+    {
+        if (health != Convert.ToInt32(CurrentHealth))
+        {
+            if (health < CurrentHealth)
+            {
+                //damage animation
+            }
+            CurrentHealth = health;
+            healthSlider.value = CurrentHealth / MaxHealth;
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)// You can change this to Trigger if you want
     {
         if(collision.gameObject.tag == "Medic")// Medium Health kit for Player
@@ -79,18 +96,15 @@ public class CharacterData : MonoBehaviour
         {
             TakeDamage(20);
         }
-        
-
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Bullet")
         {
-
             Debug.Log("Damaging the player");
             TakeDamage(damageAmount);
             //Destroy(other.gameObject, 0.5f);
-           
         }
     }
 

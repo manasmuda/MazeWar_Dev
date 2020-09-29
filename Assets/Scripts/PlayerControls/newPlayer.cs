@@ -8,16 +8,13 @@ public class newPlayer : MonoBehaviour
     public enum playerCameraMode { Fps, thirdPerson}
     public playerCameraMode Mode;
 
-  
- 
-
     public Transform fpCameraTransform;
     public Transform cameraPole;
     public Transform tpCamTransform;
     public LayerMask cameraObstacleLayer;
 
     [HideInInspector]
-   public  float maxDistanceDistance;  
+    public  float maxDistanceDistance;  
 
    [Header("Camera Rotation speed")]
    [Tooltip("Set the rotation speed for camera")]
@@ -43,7 +40,7 @@ public class newPlayer : MonoBehaviour
     Vector2 lookInput;
 
 
-           float cameraPitch;
+    public float cameraPitch;
     public float maxClamp;
     public float minClamp;
 
@@ -107,20 +104,17 @@ public class newPlayer : MonoBehaviour
      
         GetTouchInput();
 
-
         if (rightFingerId != -1)
         {
-           
             LookAround();
         }
-            Move();
         
-
     }
+
     private void FixedUpdate()
     {
 
-     
+        Move();
         if (Mode == playerCameraMode.thirdPerson)
         {
             //checking whether the player is crouched or not
@@ -234,12 +228,10 @@ public class newPlayer : MonoBehaviour
         }
         else if (moveInput.y >= 0.1f)
         {
-
             currentSpeed = walkSpeed;
         }
         else if (moveInput.y == 0f)
         {
-
             currentSpeed = 0f;
         }
         else if (moveInput.y>-1&& moveInput.y<0)
@@ -248,7 +240,7 @@ public class newPlayer : MonoBehaviour
         }
 
      //moving along direction
-        Vector2 movementDirection = moveInput * currentSpeed * Time.deltaTime;
+        Vector2 movementDirection = moveInput * currentSpeed * Time.fixedDeltaTime;
         rb.velocity = transform.right * movementDirection.x + transform.forward * movementDirection.y;
        
     }

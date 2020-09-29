@@ -19,6 +19,13 @@ public class CharacterSyncScript : MonoBehaviour
 
     public bool inCrouch = false;
 
+    public float speed;
+
+    public IEnumerator moveTime;
+    public float mt = 0f;
+
+    public bool ms = true;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,10 +42,9 @@ public class CharacterSyncScript : MonoBehaviour
 
     public void NewPlayerState(ClientState state)
     {
-        AddNewMove(new Vector3(state.position[0], state.position[1], state.position[2]), new Vector3(state.angle[0], state.angle[1], state.angle[2]));
         if (state.crouch)
         {
-            if(!inCrouch)
+            if (!inCrouch)
             {
                 inCrouch = true;
                 anim.SetBool("isCrouching", true);
@@ -46,12 +52,22 @@ public class CharacterSyncScript : MonoBehaviour
         }
         else
         {
-            if(inCrouch)
+            if (inCrouch)
             {
                 inCrouch = false;
                 anim.SetBool("isCrouching", false);
             }
         }
+        if (ms)
+        {
+            AddNewMove(new Vector3(state.position[0], state.position[1], state.position[2]), new Vector3(state.angle[0], state.angle[1], state.angle[2]));
+        }
+        else
+        {
+            StartCoroutine(AddNAngle(new Vector3(state.angle[0], state.angle[1], state.angle[2])));
+            AddNMove(new Vector3(state.position[0], state.position[1], state.position[2]));   
+        }
+       
     }
 
     public void AddNewMove(Vector3 end,Vector3 fang)
@@ -60,7 +76,7 @@ public class CharacterSyncScript : MonoBehaviour
         //float dist1 = Vector3.Distance(lastPos, transform.position);
            if ((dist > 0.1 && dist < 5) || Math.Abs(lastY-fang.y)>10)
             {
-                Debug.Log("New Move Added");
+                //Debug.Log("New Move Added");
                 /*if (movers.Count == 10)
                 {
                     movers.Dequeue();
@@ -75,9 +91,11 @@ public class CharacterSyncScript : MonoBehaviour
                 lastY = fang.y;
                 if (!isMoving && movers.Count > 0)
                 {
+                //Debug.Log("Movement Started freshly");
                     StartCoroutine(movers.Dequeue());
+                    isMoving = true;
                 }
-                Debug.Log("Last Pos Set");
+                //Debug.Log("Last Pos Set");
             }
             else if (dist >= 5)
             {
@@ -85,14 +103,43 @@ public class CharacterSyncScript : MonoBehaviour
             }
     }
 
-    public void AddNewAngle(Quaternion angle)
+    public void AddNMove(Vector3 end)
     {
-
+        float dist = Vector3.Distance(lastPos, end);
+        
+        if ((dist > 0.1 && dist < 5) )
+        {
+            IEnumerator newMover = MoveOverSecond(end);
+            if (moveTime != null)
+            {
+                StopCoroutine(moveTime);
+            }
+            moveTime = newMover;
+            StartCoroutine(moveTime);
+            mt = mt+0.2f;
+        }
+        else if (dist >= 5)
+        {
+            TransportPlayer(end, transform.rotation.eulerAngles);
+        }
     }
 
-    public IEnumerator MoveOverSpeed(Vector3 end,Vector3 fang, float speed=150)
+    IEnumerator AddNAngle(Vector3 fang)
+    {
+        yield return new WaitForSeconds(mt);
+        if(Math.Abs(lastY - fang.y) > 10)
+        {
+            lastY = fang.y;
+            Quaternion q = new Quaternion();
+            q.eulerAngles = fang;
+            transform.rotation = q;
+        }
+    }
+
+    public IEnumerator MoveOverSpeed(Vector3 end,Vector3 fang)
     {
         // speed should be 1 unit per second
+        speed = 150f;
 
         Direction = (end - transform.position).normalized;
 
@@ -106,7 +153,7 @@ public class CharacterSyncScript : MonoBehaviour
             Walking(Direction.x, Direction.z);
             if (Direction.z == 1)
             {
-                speed = 220;
+                speed = 200f;
             }
         }
 
@@ -116,15 +163,15 @@ public class CharacterSyncScript : MonoBehaviour
 
         while (transform.position != end)
         {
-            Debug.Log(transform.position.z+","+end.z);
-            transform.position = Vector3.MoveTowards(transform.position, end, speed * Time.deltaTime);
+            //Debug.Log(transform.position.z+","+end.z);
+            transform.position = Vector3.MoveTowards(transform.position, end, speed * Time.fixedDeltaTime);
 
-            yield return new WaitForEndOfFrame();
+            yield return new WaitForFixedUpdate();
         }
         
         if (movers.Count > 0)
         {
-            Debug.Log("Next Move Enqued");
+            //Debug.Log("Next Move Enqued");
             StartCoroutine(movers.Dequeue());
         }
         else
@@ -136,6 +183,29 @@ public class CharacterSyncScript : MonoBehaviour
             anim.SetFloat("CrouchX", 0);
             anim.SetFloat("CrouchY", 0);
         }
+    }
+
+    public IEnumerator MoveOverSecond( Vector3 end, float seconds=0.2f)
+    {
+        float elapsedTime = 0;
+        Vector3 startingPos = transform.position;
+        Direction = (end - transform.position).normalized;
+        if (inCrouch)
+        {
+            Crouching(Direction.x, Direction.z);
+        }
+        else
+        {
+            Walking(Direction.x, Direction.z);
+        }
+        while (elapsedTime < seconds)
+        {
+            transform.position = Vector3.Lerp(startingPos, end, (elapsedTime / seconds));
+            elapsedTime += Time.fixedDeltaTime;
+            mt -= Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+        transform.position = end;
     }
 
     public void TransportPlayer(Vector3 end,Vector3 fang)
@@ -154,8 +224,6 @@ public class CharacterSyncScript : MonoBehaviour
         anim.SetFloat("CrouchY", 0);
     }
 
-
-
     void Walking(float X, float Y)
     {
         anim.SetFloat("MoveX", X);
@@ -172,5 +240,5 @@ public class CharacterSyncScript : MonoBehaviour
         anim.SetFloat("MoveX", 0);
         anim.SetFloat("MoveY", 0);
     }
-  
+
 }

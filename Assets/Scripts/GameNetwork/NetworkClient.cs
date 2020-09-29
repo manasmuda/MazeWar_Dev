@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
@@ -29,6 +29,8 @@ public class NetworkClient
 
 	private Client clientScript;
 
+	private byte[] buffer=new byte[12400];
+
 	public NetworkClient(Client client)
     {
 		//awsClient = GameObject.Find("AWSClient").GetComponent<AWSClient>();
@@ -57,31 +59,52 @@ public class NetworkClient
 		{
 			HandleMessage(msg);
 		}
-
-		
-
-
 	}
 
 	public void RecieveUdp()
     {
 		if (udpClient != null && udpClient.Available != 0)
 		{
-			Debug.Log("Message Recieve Started");
-			byte[] buffer = new byte[12800];
+			//Debug.Log("Message Recieve Started");
+			byte[] buffer = new byte[12400];
 			udpClient.Receive(buffer);
 
 			//string data = Encoding.Default.GetString(buffer);
 			UdpMsgPacket msgPacket = NetworkProtocol.getPacketfromBytes(buffer);
-			Debug.Log("Received: " + msgPacket.message);
+			//Debug.Log("Received: " + msgPacket.message);
 			HandleUdpMessage(msgPacket);
 		}
 
 	}
 
-	
+	private void UDPRecieveCallBack(IAsyncResult result)
+	{
+		try
+		{
+			IPEndPoint clientEndPoint = new IPEndPoint(IPAddress.Any, 0);
+			byte[] data =new byte[12400]; 
+			int length=udpClient.EndReceive(result);
+			
 
+			Array.Copy(buffer, 0, data, 0, length);
+			buffer = new byte[12400];
+			udpClient.BeginReceive(buffer,0,12400,0,UDPRecieveCallBack, null);
+			UdpMsgPacket msgPacket = NetworkProtocol.getPacketfromBytes(data);
+			//string msg=Encoding.Default.GetString(data);
+			Debug.Log("Recieved UDP msg:" + msgPacket.type);
+			HandleUdpMessage(msgPacket);
 
+			Debug.Log(msgPacket.message);
+
+			//UdpMsgPacket msgPacket = new UdpMsgPacket(PacketType.Spawn, "Welcome to UDP");
+			//SendPacket(msgPacket, clientEndPoint);
+
+		}
+		catch (Exception e)
+		{
+			Debug.Log(e);
+		}
+	}
 
 	private bool TryConnect()
 	{
@@ -96,6 +119,7 @@ public class NetworkClient
 			endPoint = new IPEndPoint(IPAddress.Parse(this.playerSessionObject.IpAddress), this.playerSessionObject.Port+20);
 			udpClient = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 			udpClient.Blocking = false;
+			//udpClient.BeginReceive(buffer, 0, 12400, 0, UDPRecieveCallBack, null);
 			Debug.Log("UdpClient Created");
 			// Send the player session ID to server so it can validate the player
 			SimpleMessage connectMessage = new SimpleMessage(MessageType.Connect, this.playerSessionObject.PlayerSessionId);
@@ -182,7 +206,7 @@ public class NetworkClient
 
 			byte[] arr = NetworkProtocol.getPacketBytes(msgPacket);
 			udpClient.SendTo(arr, endPoint);
-			Debug.Log("Packet Sent:" + msgPacket.type);
+			//Debug.Log("Packet Sent:" + msgPacket.type);
 		}
 		catch(Exception e)
         {
@@ -238,7 +262,7 @@ public class NetworkClient
 
 	public void HandleUdpMessage(UdpMsgPacket packet)
     {
-		Debug.Log("Packet received:" + packet.type);
+		//Debug.Log("Packet received:" + packet.type);
 		if (packet.type == PacketType.GameState)
         {
 			clientScript.HandleGameState(packet.gameState); 
@@ -348,19 +372,25 @@ public class NetworkClient
 				//clientScript.CharSpawn();
 			}
 		}
-    } 
+    }
 
 	private void HandleServerTick(SimpleMessage msg)
-    {
+	{
 		Debug.Log("Handle Server Tick");
 		int ms = DateTime.UtcNow.Millisecond;
-		
+
 		int dif = ms - msg.time;
 		Debug.Log(dif);
-		int tt = dif / 200;
-		int ttc = dif % 200;
-		float ttcf = ((float)ttc) / 1000f;
-		clientScript.tick = msg.intData+tt;
-		clientScript.tickCounter = ttcf;
+		if (dif > 0) { 
+			int tt = dif / 200;
+			int ttc = dif % 200;
+			float ttcf = ((float)ttc) / 1000f;
+			clientScript.tick = msg.intData + tt;
+			clientScript.tickCounter = ttcf;
+		}
+        else
+        {
+			clientScript.tick = msg.intData;
+		}
 	}
 }

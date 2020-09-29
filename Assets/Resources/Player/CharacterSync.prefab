@@ -803,7 +803,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 397343516350852682}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -8204,11 +8204,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   count: 0
   isMoving: 0
-  crouching: 0
   lastPos: {x: 0, y: 0, z: 0}
   Direction: {x: 0, y: 0, z: 0}
   lastY: 0
   anim: {fileID: 0}
+  inCrouch: 0
 --- !u!1 &6674882835928919403
 GameObject:
   m_ObjectHideFlags: 0

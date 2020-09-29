@@ -20,6 +20,7 @@ public class MazeController : MonoBehaviour
 
     public void InstantiateMaze(MazeCell[,] maze)
     {
+        
         for (int i = 0; i < 20; i++)
         {
             for (int j = 0; j < 20; j++)
@@ -30,22 +31,22 @@ public class MazeController : MonoBehaviour
 
                 if (maze[i, j].northWall)
                 {
-                    Instantiate(mazeObject, new Vector3(cellx, celly, cellz + 3f), Quaternion.Euler(270, 180, 0));
+                    Instantiate(mazeObject, new Vector3(cellx, celly, cellz + 3f), Quaternion.Euler(270, 180, 0),transform);
                 }
 
                 if (maze[i, j].southWall)
                 {
-                    Instantiate(mazeObject, new Vector3(cellx, celly, cellz - 3f), Quaternion.Euler(270, 0, 0));
+                    Instantiate(mazeObject, new Vector3(cellx, celly, cellz - 3f), Quaternion.Euler(270, 0, 0),transform);
                 }
 
                 if (maze[i, j].eastWall)
                 {
-                    Instantiate(mazeObject, new Vector3(cellx+3f, celly, cellz), Quaternion.Euler(270, 270, 0));
+                    Instantiate(mazeObject, new Vector3(cellx+3f, celly, cellz), Quaternion.Euler(270, 270, 0),transform);
                 }
 
                 if (maze[i, j].westWall)
                 {
-                    Instantiate(mazeObject, new Vector3(cellx-3f, celly, cellz ), Quaternion.Euler(270, 90, 0));
+                    Instantiate(mazeObject, new Vector3(cellx-3f, celly, cellz ), Quaternion.Euler(270, 90, 0),transform);
                 }
             }
         }

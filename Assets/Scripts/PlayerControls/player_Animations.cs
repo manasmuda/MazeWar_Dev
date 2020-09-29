@@ -16,12 +16,8 @@ public class player_Animations : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-      
-      
-      
-
       
         char_anim.SetBool("isCrouching", crouch_Button.instance.isCrouched);
 
@@ -35,14 +31,7 @@ public class player_Animations : MonoBehaviour
           
         }
 
-
         Shooting();
-
-
-
-
-
-
     }
 
 

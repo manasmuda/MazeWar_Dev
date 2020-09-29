@@ -780,8 +780,8 @@ MonoBehaviour:
   maxDistanceDistance: 0
   cameraSensitivity: 10
   currentSpeed: 0
-  walkSpeed: 120
-  runningSpeed: 200
+  walkSpeed: 150
+  runningSpeed: 250
   moveInputDeadZone: 10
   maxClamp: 20
   minClamp: -30

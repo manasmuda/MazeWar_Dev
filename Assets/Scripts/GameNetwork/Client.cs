@@ -38,6 +38,8 @@ public class Client : MonoBehaviour
 
     private bool tickMode = false;
 
+    private int prevTick = -1;
+
     //Cognito credentials for sending signed requests to the API
     //public static Amazon.Runtime.ImmutableCredentials cognitoCredentials = null;
 
@@ -100,7 +102,6 @@ public class Client : MonoBehaviour
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
-
 
     public void FetchGameAndPlayerSession(Dictionary<string,string> payLoad)
     {
@@ -202,7 +203,7 @@ public class Client : MonoBehaviour
         //#endif
         //#if UNITY_PLAYER
         playerSessionObj.IpAddress = "192.168.43.254";// ip address if using lan
-        //playerSessionObj.IpAddress = "127.0.0.1";
+        //playerSessionObj.IpAddress = "127.0.0.1"
         //#endif
         playerSessionObj.Port = 1935;
         playerSessionObj.GameSessionId = "gsess-abc";
@@ -276,6 +277,8 @@ public class Client : MonoBehaviour
         clientState.team = MyData.team;
         clientState.position = new float[3]{character.transform.position.x, character.transform.position.y, character.transform.position.z};
         clientState.angle = new float[3] { character.transform.rotation.eulerAngles.x, character.transform.rotation.eulerAngles.y, character.transform.rotation.eulerAngles.z };
+        clientState.health = Convert.ToInt32(character.GetComponent<CharacterData>().CurrentHealth);
+        clientState.movementPressed = character.GetComponent<newPlayer>().currentSpeed == 0;
         UdpMsgPacket packet = new UdpMsgPacket(PacketType.ClientState, "", MyData.playerId, MyData.team);
         packet.clientState = clientState;
         networkClient.SendPacket(packet);
@@ -318,56 +321,98 @@ public class Client : MonoBehaviour
 
     public void HandleGameState(GameState state)
     {
-        Debug.Log("GameState handling started");
-        try
+        // Debug.Log("GameState handling started");
+        if (state.tick > prevTick)
         {
-            if (MyTeamData.teamName == "blue")
+            prevTick = state.tick;
+            float tempDist = (tick - state.tick - 2) * 150 * 0.2f;
+            try
             {
-                for (int i = 0; i < state.blueTeamState.Count; i++)
+                if (MyTeamData.teamName == "blue")
                 {
-                    string id = state.blueTeamState[i].playerId;
-                    if (MyTeamData.playerData.ContainsKey(id))
+                    for (int i = 0; i < state.blueTeamState.Count; i++)
                     {
-                        MyTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.blueTeamState[i]);
-                    }
-                    else
-                    {
+                        string id = state.blueTeamState[i].playerId;
+                        if (MyTeamData.playerData.ContainsKey(id))
+                        {
+                            if (state.blueTeamState[i].movementPressed && tempDist > 0)
+                            {
+                                float ay = state.blueTeamState[i].angle[1];
+                                state.blueTeamState[i].position[0] = state.blueTeamState[i].position[0] + tempDist * Mathf.Sin(ay);
+                                state.blueTeamState[i].position[2] = state.blueTeamState[i].position[2] + tempDist * Mathf.Cos(ay);
+                            }
+                            GameObject playerObject = MyTeamData.playerData[id];
+                            playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(state.blueTeamState[i]);
+                            playerObject.GetComponent<CharacterData>().NewPlayerState(state.blueTeamState[i]);
+                        }
+                        else
+                        {
 
+                        }
+                    }
+                    for (int i = 0; i < state.redTeamState.Count; i++)
+                    {
+                        string id = state.redTeamState[i].playerId;
+                        if (state.redTeamState[i].movementPressed && tempDist > 0)
+                        {
+                            float ay = state.redTeamState[i].angle[1];
+                            state.redTeamState[i].position[0] = state.redTeamState[i].position[0] + tempDist * Mathf.Sin(ay);
+                            state.redTeamState[i].position[2] = state.redTeamState[i].position[2] + tempDist * Mathf.Cos(ay);
+                        }
+                        GameObject playerObject = OppTeamData.playerData[id];
+                        playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(state.redTeamState[i]);
+                        playerObject.GetComponent<CharacterData>().NewPlayerState(state.redTeamState[i]);
                     }
                 }
-                for (int i = 0; i < state.redTeamState.Count; i++)
+                else
                 {
-                    string id = state.redTeamState[i].playerId;
-                    OppTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.redTeamState[i]);
+                    for (int i = 0; i < state.redTeamState.Count; i++)
+                    {
+                        string id = state.redTeamState[i].playerId;
+                        if (MyTeamData.playerData.ContainsKey(id))
+                        {
+                            if (state.redTeamState[i].movementPressed && tempDist > 0)
+                            {
+                                float ay = state.redTeamState[i].angle[1];
+                                state.redTeamState[i].position[0] = state.redTeamState[i].position[0] + tempDist * Mathf.Sin(ay);
+                                state.redTeamState[i].position[2] = state.redTeamState[i].position[2] + tempDist * Mathf.Cos(ay);
+                            }
+                            GameObject playerObject = MyTeamData.playerData[id];
+                            playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(state.redTeamState[i]);
+                            playerObject.GetComponent<CharacterData>().NewPlayerState(state.redTeamState[i]);
+                        }
+                        else
+                        {
+
+                        }
+                    }
+                    for (int i = 0; i < state.blueTeamState.Count; i++)
+                    {
+                        string id = state.blueTeamState[i].playerId;
+                        if (state.blueTeamState[i].movementPressed && tempDist > 0)
+                        {
+                            float ay = state.blueTeamState[i].angle[1];
+                            state.blueTeamState[i].position[0] = state.blueTeamState[i].position[0] + tempDist * Mathf.Sin(ay);
+                            state.blueTeamState[i].position[2] = state.blueTeamState[i].position[2] + tempDist * Mathf.Cos(ay);
+                        }
+                        GameObject playerObject = OppTeamData.playerData[id];
+                        playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(state.blueTeamState[i]);
+                        playerObject.GetComponent<CharacterData>().NewPlayerState(state.blueTeamState[i]);
+                    }
                 }
             }
-            else
+            catch (Exception e)
             {
-                for (int i = 0; i < state.redTeamState.Count; i++)
-                {
-                    string id = state.redTeamState[i].playerId;
-                    if (MyTeamData.playerData.ContainsKey(id))
-                    {
-                        MyTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.redTeamState[i]);
-                    }
-                    else
-                    {
-
-                    }
-                }
-                for (int i = 0; i < state.blueTeamState.Count; i++)
-                {
-                    string id = state.blueTeamState[i].playerId;
-                    OppTeamData.playerData[id].GetComponent<CharacterSyncScript>().NewPlayerState(state.blueTeamState[i]);
-                }
+                Debug.Log(e);
             }
+            Debug.Log("Gamestate handling ended");
         }
-        catch(Exception e)
-        {
-            Debug.Log(e);
-        }
-        Debug.Log("Gamestate handling ended");
+    }
 
+    public void ShootAction(ClientState state)
+    {
+        UdpMsgPacket packet = new UdpMsgPacket(PacketType.Shoot,"",MyData.playerId,MyData.team);
+        networkClient.SendPacket(packet);
     }
 
     //Remove Coroutines for functions below this after detailed matchmaking
@@ -385,6 +430,7 @@ public class Client : MonoBehaviour
         mazeController = MCO.GetComponent<MazeController>();
         Debug.Log(mazeController);
         mazeController.InstantiateMaze(maze);
+        MCO.GetComponent<MeshCombiner>().enabled = true;
     }
 
     public void SetUpCoins(Vector3[] _coinPos)
