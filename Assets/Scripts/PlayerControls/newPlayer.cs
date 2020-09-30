@@ -8,6 +8,9 @@ public class newPlayer : MonoBehaviour
     public enum playerCameraMode { Fps, thirdPerson}
     public playerCameraMode Mode;
 
+
+    public ShooterButton shooterButton;
+
     public Transform fpCameraTransform;
     public Transform cameraPole;
     public Transform tpCamTransform;
@@ -80,7 +83,8 @@ public class newPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-      
+
+        shooterButton = FindObjectOfType<ShooterButton>();
        
         rightFingerId = -1;
 
@@ -222,7 +226,7 @@ public class newPlayer : MonoBehaviour
 
 
         //Controlling speed through the axis
-        if (moveInput.y > 0.75f && moveInput.y <= 1)
+        if (moveInput.y > 0.75f && moveInput.y <= 1 && !shooterButton.pressed )
         {
             currentSpeed = Mathf.Lerp(walkSpeed, runningSpeed, 1f);
         }

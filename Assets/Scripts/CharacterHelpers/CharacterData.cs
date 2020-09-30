@@ -21,7 +21,7 @@ public class CharacterData : MonoBehaviour
     
     void Update()
     {
-        healthSlider.transform.LookAt(Camera.main.transform);
+       
     }
 
 

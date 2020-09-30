@@ -38,13 +38,22 @@ public class player_Animations : MonoBehaviour
     void Shooting()
     {
 
-        if (_shooterButton.pressed && newPlayer.playerController_instance.moveInput.x == 0f && newPlayer.playerController_instance.moveInput.y == 0f)
-        { 
+        if (_shooterButton.pressed&& !crouch_Button.instance.isCrouched)
+        {
+           
             char_anim.SetBool("isShooting", true);
         }
         else
-        {        
+        {
+            
             char_anim.SetBool("isShooting", false);
+        }
+        if (_shooterButton.pressed && crouch_Button.instance.isCrouched)
+        {
+            char_anim.SetBool("isCrouchShoot", true);
+        }
+        else {
+            char_anim.SetBool("isCrouchShoot", false);
         }
 
     }
