@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class makeMapObject : MonoBehaviour
+public class MakeMapObject : MonoBehaviour
 {
     public Image Image;
 

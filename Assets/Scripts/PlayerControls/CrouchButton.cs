@@ -4,11 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class crouch_Button : MonoBehaviour, IPointerClickHandler
+public class CrouchButton : MonoBehaviour, IPointerClickHandler
 {
     public bool isCrouched;
     public int hitTimes = 0;
-    public static crouch_Button instance;
+    public static CrouchButton instance;
 
     // Start is called before the first frame update
     

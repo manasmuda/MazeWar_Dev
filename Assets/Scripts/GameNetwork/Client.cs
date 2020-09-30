@@ -278,7 +278,7 @@ public class Client : MonoBehaviour
         clientState.position = new float[3]{character.transform.position.x, character.transform.position.y, character.transform.position.z};
         clientState.angle = new float[3] { character.transform.rotation.eulerAngles.x, character.transform.rotation.eulerAngles.y, character.transform.rotation.eulerAngles.z };
         clientState.health = Convert.ToInt32(character.GetComponent<CharacterData>().CurrentHealth);
-        clientState.movementPressed = character.GetComponent<newPlayer>().currentSpeed == 0;
+        clientState.movementPressed = character.GetComponent<NewPlayer>().currentSpeed == 0;
         UdpMsgPacket packet = new UdpMsgPacket(PacketType.ClientState, "", MyData.playerId, MyData.team);
         packet.clientState = clientState;
         networkClient.SendPacket(packet);

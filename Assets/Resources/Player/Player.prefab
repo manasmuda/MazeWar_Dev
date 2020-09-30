@@ -780,9 +780,10 @@ MonoBehaviour:
   maxDistanceDistance: 0
   cameraSensitivity: 10
   currentSpeed: 0
-  walkSpeed: 120
-  runningSpeed: 200
+  walkSpeed: 140
+  runningSpeed: 230
   moveInputDeadZone: 10
+  cameraPitch: 0
   maxClamp: 20
   minClamp: -30
   moveInput: {x: 0, y: 0}
@@ -864,6 +865,8 @@ MonoBehaviour:
   muzzleFlashSpawnPoint: {fileID: 9002151658754746297}
   coolDownTime: 0.5
   bulletForce: 100
+  shooting: 0
+  loadedBullets: 10
 --- !u!1 &2563822376564615137
 GameObject:
   m_ObjectHideFlags: 0

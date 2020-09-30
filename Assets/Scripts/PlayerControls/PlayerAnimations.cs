@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class player_Animations : MonoBehaviour
+public class PlayerAnimations : MonoBehaviour
 {
 
     public Animator char_anim;
@@ -19,14 +19,14 @@ public class player_Animations : MonoBehaviour
     void LateUpdate()
     {
       
-        char_anim.SetBool("isCrouching", crouch_Button.instance.isCrouched);
+        char_anim.SetBool("isCrouching", CrouchButton.instance.isCrouched);
 
-        if (crouch_Button.instance.isCrouched)
+        if (CrouchButton.instance.isCrouched)
         {
-            Crouching(newPlayer.playerController_instance.moveInput.x, newPlayer.playerController_instance.moveInput.y);
+            Crouching(NewPlayer.playerController_instance.moveInput.x, NewPlayer.playerController_instance.moveInput.y);
         }
-        else if(!crouch_Button.instance.isCrouched) {
-             Walking(newPlayer.playerController_instance.moveInput.x, newPlayer.playerController_instance.moveInput.y);
+        else if(!CrouchButton.instance.isCrouched) {
+             Walking(NewPlayer.playerController_instance.moveInput.x, NewPlayer.playerController_instance.moveInput.y);
 
           
         }
@@ -38,7 +38,7 @@ public class player_Animations : MonoBehaviour
     void Shooting()
     {
 
-        if (_shooterButton.pressed&& !crouch_Button.instance.isCrouched)
+        if (_shooterButton.pressed&& !CrouchButton.instance.isCrouched)
         {
            
             char_anim.SetBool("isShooting", true);
@@ -48,7 +48,7 @@ public class player_Animations : MonoBehaviour
             
             char_anim.SetBool("isShooting", false);
         }
-        if (_shooterButton.pressed && crouch_Button.instance.isCrouched)
+        if (_shooterButton.pressed && CrouchButton.instance.isCrouched)
         {
             char_anim.SetBool("isCrouchShoot", true);
         }

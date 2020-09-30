@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CnControls;
 
-public class newPlayer : MonoBehaviour
+public class NewPlayer : MonoBehaviour
 {
     public enum playerCameraMode { Fps, thirdPerson}
     public playerCameraMode Mode;
@@ -32,22 +32,17 @@ public class newPlayer : MonoBehaviour
     [Header("Run Speed")]
     [Tooltip("Set the speed for run")]
     public float runningSpeed = 300f;
-
     
     public float moveInputDeadZone;
   
     int rightFingerId;
     float halfScreenWidth;
 
-
     Vector2 lookInput;
-
 
     public float cameraPitch;
     public float maxClamp;
     public float minClamp;
-
-
 
     float maxCamY = 1.682f;
     float minCamY =1.45f;
@@ -62,10 +57,7 @@ public class newPlayer : MonoBehaviour
    
     public Rigidbody rb;
 
-
-  
-
-    public static newPlayer playerController_instance;
+    public static NewPlayer playerController_instance;
 
     private void Awake()
     {
@@ -122,7 +114,7 @@ public class newPlayer : MonoBehaviour
         if (Mode == playerCameraMode.thirdPerson)
         {
             //checking whether the player is crouched or not
-            if (crouch_Button.instance.isCrouched)
+            if (CrouchButton.instance.isCrouched)
             {
                 //aligning camera if crouched
                 cameraPole.localPosition = new Vector3(cameraPole.localPosition.x, Mathf.Lerp(cameraPole.localPosition.y, minCamY, 0.2f), cameraPole.localPosition.z);
