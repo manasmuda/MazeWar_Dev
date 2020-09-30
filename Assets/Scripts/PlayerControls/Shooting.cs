@@ -10,12 +10,16 @@ public class Shooting : MonoBehaviour
     public GameObject bulletPrefab;
     public Transform bulletSpawnPos,directionToGo;
     public ShooterButton shooterButton;
-    public ParticleSystem muzzleFlash;
 
-  
+    [Header("Muzzle Flash")]
+    public GameObject muzzleFlashPrefab;
+    public Transform muzzleFlashSpawnPoint;
+
+    [Header("Bullet Spawning Time")]
     public float coolDownTime = 0f;
     private float _coolDownTime = 0.5f;
     public float bulletForce = 100f;
+
     public bool shooting = false;
     public int loadedBullets = 10;
 
@@ -32,7 +36,7 @@ public class Shooting : MonoBehaviour
     void Update()
 
     {
-        if (shooterButton.pressed && newPlayer.playerController_instance.moveInput.x != 0 && newPlayer.playerController_instance.moveInput.y != 0|| crouch_Button.instance.isCrouched)
+        if (shooterButton.pressed && NewPlayer.playerController_instance.moveInput.x != 0 && NewPlayer.playerController_instance.moveInput.y != 0|| CrouchButton.instance.isCrouched)
         {
             //if the player not moving and standing for shoot
             if (!shooting)
@@ -76,7 +80,8 @@ public class Shooting : MonoBehaviour
                 GameObject temp = Instantiate(bulletPrefab, bulletSpawnPos.position, Quaternion.identity);
                 temp.AddComponent<Rigidbody>();
                 temp.GetComponent<Rigidbody>().AddForce(directionToGo.forward * bulletForce, ForceMode.Impulse);
-                muzzleFlash.Play();
+                GameObject _muzzleflash = Instantiate(muzzleFlashPrefab, muzzleFlashSpawnPoint.position, Quaternion.Euler(0f, -90f, 0f));
+                Destroy(_muzzleflash, 2f);
                 Destroy(temp, 5f);
             }
         }
