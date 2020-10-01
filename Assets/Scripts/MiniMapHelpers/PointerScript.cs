@@ -5,7 +5,7 @@ using UnityEngine;
 public class PointerScript : MonoBehaviour
 {
     public Transform player;
-    public Camera minimapCam;
+    public Transform minimapCamera;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,6 +16,7 @@ public class PointerScript : MonoBehaviour
     void Update()
     {
         
-        this.transform.localEulerAngles = new Vector3(0f,0f, -player.transform.localEulerAngles.y);
+        this.transform.localEulerAngles = new Vector3(90f,0f, -player.transform.localEulerAngles.y);
+        this.transform.position = player.transform.position;
     }
 }
