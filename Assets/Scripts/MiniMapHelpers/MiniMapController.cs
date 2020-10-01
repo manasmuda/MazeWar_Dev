@@ -10,19 +10,22 @@ public class MapObject
     public GameObject owner { get; set; }
 }
 
+
+
 public class MiniMapController : MonoBehaviour
 {
     public Transform player;
     public Camera minimapCam;
-
+    public Canvas canvas;
     public static List<MapObject> mapObjects = new List<MapObject>();
 
-    public static void RegisterMapObject( GameObject gameobject , Image image)
+
+    public static void RegisterMapObject(GameObject gameobject, Image image)
     {
         Image i = Instantiate(image);
         mapObjects.Add(new MapObject() { owner = gameobject, icon = i });
     }
-    public static void RemoveMapobject( GameObject gameObject)
+    public static void RemoveMapobject(GameObject gameObject)
     {
         List<MapObject> newList = new List<MapObject>();
         for (int i = 0; i < mapObjects.Count; i++)
@@ -39,6 +42,9 @@ public class MiniMapController : MonoBehaviour
         mapObjects.AddRange(newList);
     }
 
+    public List<GameObject> otherplayer = new List<GameObject>();
+    public List<GameObject> pointer = new List<GameObject>();
+    public GameObject[] otherPlayerPrefab;
 
     void DrawMapIcons()
     {
@@ -56,7 +62,7 @@ public class MiniMapController : MonoBehaviour
                 MO.icon.enabled = true;
 
 
-            Vector3 screenPos = minimapCam.WorldToViewportPoint(MO.owner.transform.position, Camera.MonoOrStereoscopicEye.Mono);
+            Vector3 screenPos = minimapCam.WorldToViewportPoint(MO.owner.transform.position);
             MO.icon.transform.SetParent(this.transform);
 
             RectTransform rt = this.GetComponent<RectTransform>();
@@ -64,7 +70,7 @@ public class MiniMapController : MonoBehaviour
             Vector3[] corners = new Vector3[4];
             rt.GetWorldCorners(corners);
 
-            screenPos.x =Mathf.Clamp (screenPos.x * rt.rect.width + corners[0].x, corners[0].x, corners[2].x);
+            screenPos.x = Mathf.Clamp(screenPos.x *  rt.rect.width   + corners[0].x, corners[0].x, corners[2].x);
             screenPos.y = Mathf.Clamp(screenPos.y * rt.rect.height + corners[0].y, corners[0].y, corners[1].y);
 
             screenPos.z = 0;
@@ -73,6 +79,19 @@ public class MiniMapController : MonoBehaviour
         }
     }
 
+
+    private void Start()
+    {
+       
+      
+        for (int i = 0; i < otherPlayerPrefab.Length; i++)
+        {
+
+            otherplayer.Add(otherPlayerPrefab[i]);
+            
+        }
+
+    }
     private void Update()
     {
         DrawMapIcons();
