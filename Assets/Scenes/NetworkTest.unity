@@ -525,6 +525,8 @@ MonoBehaviour:
     type: 3}
   redCharPrefab: {fileID: 6596069339946972799, guid: b9e28ea3f94ef8a41884ac86f209472a,
     type: 3}
+  playerPointer: {fileID: 2169608907344981087, guid: 49a9153a2afd045428df8a5fa1272b35,
+    type: 3}
 --- !u!4 &464187047
 Transform:
   m_ObjectHideFlags: 0

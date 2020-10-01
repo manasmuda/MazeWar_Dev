@@ -15,24 +15,15 @@ public class MiniMapCamera : MonoBehaviour
 
     public GameObject pointer;
 
-
-
     public Transform player;
-
 
     public List<ListOfOtherPlayers> _listOfPlayers = new List<ListOfOtherPlayers>();
 
     public float miniMapSize;
-    public int count = 1;
-
-
  
     void Start()
     {
-       
-      
-
-        for (int i = 0; i < count; i++)
+        /*for (int i = 0; i < count; i++)
         {
 
             _listOfPlayers.Add(new ListOfOtherPlayers());
@@ -40,11 +31,17 @@ public class MiniMapCamera : MonoBehaviour
             _listOfPlayers[i].Pointer = temp;
             // _listOfPlayers[i].otherPlayer = GameObject.FindObjectOfType<CharacterSyncScript>().gameObject;
             //_listOfPlayers[i].Pointer.transform.position = _listOfPlayers[i].otherPlayer.transform.position;
-        }
-
-
+        }*/
     }
 
+    public void AddPlayer(GameObject player)
+    {
+        GameObject temp = Instantiate(pointer);
+        ListOfOtherPlayers otherPlayer = new ListOfOtherPlayers();
+        otherPlayer.otherPlayer = player;
+        otherPlayer.Pointer = temp;
+        _listOfPlayers.Add(otherPlayer);
+    }
 
     // Update is called once per frame
     void Update()

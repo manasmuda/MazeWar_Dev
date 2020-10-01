@@ -8,12 +8,13 @@ public class MinimapFollowPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player = FindObjectOfType<NewPlayer>().transform;
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (player != null)
         this.transform.position = new Vector3(player.position.x, this.transform.position.y, player.position.z);
     }
 }

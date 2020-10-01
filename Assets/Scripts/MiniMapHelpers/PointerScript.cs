@@ -9,7 +9,7 @@ public class PointerScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        player = FindObjectOfType<NewPlayer>().transform;
+        
     }
 
     // Update is called once per frame
@@ -17,6 +17,6 @@ public class PointerScript : MonoBehaviour
     {
         
         this.transform.localEulerAngles = new Vector3(90f,0f, -player.transform.localEulerAngles.y);
-        this.transform.position = player.transform.position;
+        this.transform.position = new Vector3(player.position.x,8f,player.position.z);
     }
 }

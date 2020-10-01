@@ -66,6 +66,11 @@ public class Client : MonoBehaviour
     [SerializeField]
     private GameObject redCharPrefab;
 
+    [SerializeField]
+    private GameObject playerPointer;
+
+    private GameObject miniMapCamera;
+
     void Awake()
     {
         UnityInitializer.AttachToGameObject(this.gameObject);
@@ -202,8 +207,8 @@ public class Client : MonoBehaviour
         //playerSessionObj.IpAddress = "10.0.2.2";
         //#endif
         //#if UNITY_PLAYER
-        playerSessionObj.IpAddress = "192.168.43.254";// ip address if using lan
-        //playerSessionObj.IpAddress = "127.0.0.1"
+        //playerSessionObj.IpAddress = "192.168.43.254";// ip address if using lan
+        playerSessionObj.IpAddress = "127.0.0.1";
         //#endif
         playerSessionObj.Port = 1935;
         playerSessionObj.GameSessionId = "gsess-abc";
@@ -423,8 +428,9 @@ public class Client : MonoBehaviour
 
     IEnumerator SetMaze(MazeCell[,] maze)
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.2f);
 
+        miniMapCamera = GameObject.Find("MiniMapCamera");
         GameObject MCO = GameObject.Find("Maze");
         Debug.Log(MCO);
         mazeController = MCO.GetComponent<MazeController>();
@@ -486,9 +492,16 @@ public class Client : MonoBehaviour
 
     IEnumerator MyCharSpawn(Vector3 pos)
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.2f);
 
         character = Instantiate(mainCharPrefab, pos, MyTeamData.spwanDirection);
+        playerPointer = Instantiate(playerPointer, new Vector3(pos.x, 10f, pos.z),MyTeamData.spwanDirection);
+        MiniMapCamera mmc = miniMapCamera.GetComponent<MiniMapCamera>();
+        mmc.pointer = playerPointer;
+        mmc.player = character.transform;
+        playerPointer.GetComponent<PointerScript>().player = character.transform;
+        playerPointer.GetComponent<PointerScript>().minimapCamera = miniMapCamera.transform;
+        miniMapCamera.GetComponent<MinimapFollowPlayer>().player = character.transform;
     }
 
     public void OtherCharSpawn(string id,string team,Vector3 pos)
@@ -498,11 +511,12 @@ public class Client : MonoBehaviour
 
     IEnumerator CharSpawn(string id,string team,Vector3 pos)
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.2f);
         if (team == MyTeamData.teamName)
         {
             GameObject tempObject = Instantiate(MyTeamData.charPrefab, pos, MyTeamData.spwanDirection);
             MyTeamData.playerData.Add(id, tempObject);
+            miniMapCamera.GetComponent<MiniMapCamera>().AddPlayer(tempObject);
         }
         else
         {
