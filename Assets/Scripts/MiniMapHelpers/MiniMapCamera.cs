@@ -24,7 +24,9 @@ public class MiniMapCamera : MonoBehaviour
 
     public float miniMapSize;
     public int count = 1;
-    // Start is called before the first frame update
+
+
+ 
     void Start()
     {
        
