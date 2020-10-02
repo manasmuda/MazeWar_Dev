@@ -12,6 +12,10 @@ public class CharacterData : MonoBehaviour
 
     public Slider healthSlider;
 
+    public Text PlayerName;
+
+
+
     void Start()
     {
         CurrentHealth = MaxHealth; // Assigning the Variables
@@ -21,7 +25,7 @@ public class CharacterData : MonoBehaviour
     
     void Update()
     {
-       
+      
     }
 
 
