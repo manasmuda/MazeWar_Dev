@@ -36,15 +36,17 @@ public class Shooting : MonoBehaviour
     void Update()
 
     {
-        if (shooterButton.pressed && NewPlayer.playerController_instance.moveInput.x != 0 && NewPlayer.playerController_instance.moveInput.y != 0|| CrouchButton.instance.isCrouched)
-        {
-            //if the player not moving and standing for shoot
-            if (!shooting)
-            {
-                shooting = true;
-                coolDownTime = _coolDownTime;
-                Shoot();             
-            }
+      
+        if (shooterButton.pressed)
+         {
+                //if the player not moving and standing for shoot
+                if (!shooting)
+                {
+                    shooting = true;
+                    coolDownTime = _coolDownTime;
+                    Shoot();
+                }
+            
         }
 
         if (shooting)
@@ -71,7 +73,7 @@ public class Shooting : MonoBehaviour
             {
                 ClientState state = new ClientState();
                 state.bulletsLeft = loadedBullets;
-                state.position = new float[3]{transform.position.x,transform.position.y,transform.position.z};
+                state.position = new float[3] { transform.position.x, transform.position.y, transform.position.z };
                 state.angle = new float[3] { transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z };
                 state.tick = clientScript.tick;
                 state.playerId = MyData.playerId;

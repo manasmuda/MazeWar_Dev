@@ -12,16 +12,22 @@ public class CharacterData : MonoBehaviour
 
     public Slider healthSlider;
 
+    public Text PlayerName;
+
+
+
     void Start()
     {
         CurrentHealth = MaxHealth; // Assigning the Variables
-        //healthSlider.value = (CurrentHealth / MaxHealth);
+        healthSlider.value = (CurrentHealth / MaxHealth);
+        PlayerName = FindObjectOfType<Text>();
+
     }
 
     
     void Update()
     {
-       
+      
     }
 
 
