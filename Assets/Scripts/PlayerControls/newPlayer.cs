@@ -170,6 +170,7 @@ public class NewPlayer : MonoBehaviour
                     {
                        
                         lookInput = touch.deltaPosition * cameraSensitivity * Time.deltaTime;
+
                     }
                   
                     
@@ -218,7 +219,7 @@ public class NewPlayer : MonoBehaviour
 
 
         //Controlling speed through the axis
-        if (moveInput.y > 0.75f && moveInput.y <= 1 && !shooterButton.pressed )
+        if (moveInput.y > 0.75f && moveInput.y <= 1 && !shooterButton.pressed && !CrouchButton.instance.isCrouched )
         {
             currentSpeed = Mathf.Lerp(walkSpeed, runningSpeed, 1f);
         }
