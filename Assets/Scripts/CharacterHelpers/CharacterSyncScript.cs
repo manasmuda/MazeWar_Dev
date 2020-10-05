@@ -140,11 +140,11 @@ public class CharacterSyncScript : MonoBehaviour
     public IEnumerator MoveOverSpeed(Vector3 end,Vector3 fang)
     {
         // speed should be 1 unit per second
-        Debug.Log("Move Over Speed Started");
+        //Debug.Log("Move Over Speed Started");
         speed = 30f;
 
         Direction = (end - transform.position).normalized;
-        Debug.Log("Direction is created");
+        //Debug.Log("Direction is created");
         if (inCrouch)
         {
             Crouching(Direction.x, Direction.z);
@@ -158,30 +158,30 @@ public class CharacterSyncScript : MonoBehaviour
             }
         }
 
-        Debug.Log("w/c animation set");
+        //Debug.Log("w/c animation set");
 
         Quaternion q = new Quaternion();
         q.eulerAngles = fang;
         transform.rotation = q;
 
-        Debug.Log("Angle Set");
+        //Debug.Log("Angle Set");
         int lc = 0;
-        Debug.Log("end:" + end);
+        //Debug.Log("end:" + end);
         while (transform.position != end)
         {
-            Debug.Log("t:"+transform.position.z+",e:"+end.z);
+            //Debug.Log("t:"+transform.position.z+",e:"+end.z);
             transform.position = Vector3.MoveTowards(transform.position, end, speed * 0.02f);
-            Debug.Log("lc:" + lc+", transformed");
+            //Debug.Log("lc:" + lc+", transformed");
             lc++;
             yield return new WaitForSeconds(0.02f);
-            Debug.Log("lc:" + lc);
+            //Debug.Log("lc:" + lc);
             if (lc > 10)
             {
                 break;
             }
         }
 
-        Debug.Log("Transformation fixed");
+        //Debug.Log("Transformation fixed");
 
         if (movers.Count > 0)
         {

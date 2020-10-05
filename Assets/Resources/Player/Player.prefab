@@ -778,7 +778,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   maxDistanceDistance: 0
-  cameraSensitivity: 10
+  cameraSensitivity: 8
   currentSpeed: 0
   walkSpeed: 20
   runningSpeed: 40
@@ -804,6 +804,7 @@ MonoBehaviour:
   CurrentHealth: 0
   damageAmount: 20
   healthSlider: {fileID: 0}
+  PlayerName: {fileID: 0}
 --- !u!114 &2514212490502318231
 MonoBehaviour:
   m_ObjectHideFlags: 0

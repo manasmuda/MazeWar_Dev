@@ -28,10 +28,10 @@ public class NewPlayer : MonoBehaviour
 
     [Header("Walking speed")]
    [Tooltip("Set the speed for walk")]
-    public float walkSpeed = 170f;
+    public float walkSpeed = 20f;
     [Header("Run Speed")]
     [Tooltip("Set the speed for run")]
-    public float runningSpeed = 300f;
+    public float runningSpeed = 40f;
     
     public float moveInputDeadZone;
   

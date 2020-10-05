@@ -502,6 +502,7 @@ public class Client : MonoBehaviour
         playerPointer.GetComponent<PointerScript>().player = character.transform;
         playerPointer.GetComponent<PointerScript>().minimapCamera = miniMapCamera.transform;
         miniMapCamera.GetComponent<MinimapFollowPlayer>().player = character.transform;
+        GameObject.Find("TempCamera").SetActive(false);
     }
 
     public void OtherCharSpawn(string id,string team,Vector3 pos)
