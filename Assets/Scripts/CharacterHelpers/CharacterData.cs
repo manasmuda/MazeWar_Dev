@@ -15,7 +15,7 @@ public class CharacterData : MonoBehaviour
     void Start()
     {
         CurrentHealth = MaxHealth; // Assigning the Variables
-        healthSlider.value = (CurrentHealth / MaxHealth);
+        //healthSlider.value = (CurrentHealth / MaxHealth);
     }
 
     

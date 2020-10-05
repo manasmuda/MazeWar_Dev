@@ -846,7 +846,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 397343516350852682}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!1 &397343516426379229
 GameObject:
   m_ObjectHideFlags: 0
@@ -8115,6 +8115,7 @@ GameObject:
   - component: {fileID: 6596069339946973057}
   - component: {fileID: 6596069339946972797}
   - component: {fileID: 6596069339946972796}
+  - component: {fileID: -5268826663499820832}
   m_Layer: 0
   m_Name: CharacterSync
   m_TagString: Player
@@ -8209,6 +8210,25 @@ MonoBehaviour:
   lastY: 0
   anim: {fileID: 0}
   inCrouch: 0
+  speed: 0
+  mt: 0
+  ms: 1
+--- !u!114 &-5268826663499820832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6596069339946972799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5306dc5d2dc72e4da6fda03ac59de7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHealth: 100
+  CurrentHealth: 0
+  damageAmount: 20
+  healthSlider: {fileID: 397343516058788197}
 --- !u!1 &6674882835928919403
 GameObject:
   m_ObjectHideFlags: 0

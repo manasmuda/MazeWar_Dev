@@ -104,13 +104,13 @@ public class NewPlayer : MonoBehaviour
         {
             LookAround();
         }
-        
+        Move();
     }
 
     private void FixedUpdate()
     {
 
-        Move();
+        
         if (Mode == playerCameraMode.thirdPerson)
         {
             //checking whether the player is crouched or not
@@ -192,7 +192,6 @@ public class NewPlayer : MonoBehaviour
             case playerCameraMode.Fps:
                 cameraPitch = Mathf.Clamp(cameraPitch - lookInput.y, minClamp, maxClamp);
                 fpCameraTransform.localRotation = Quaternion.Euler(cameraPitch, 0, 0);
-
                 break;
             case playerCameraMode.thirdPerson:
                 cameraPitch = Mathf.Clamp(cameraPitch - lookInput.y, minClamp, maxClamp);
@@ -220,7 +219,7 @@ public class NewPlayer : MonoBehaviour
         //Controlling speed through the axis
         if (moveInput.y > 0.75f && moveInput.y <= 1 && !shooterButton.pressed )
         {
-            currentSpeed = Mathf.Lerp(walkSpeed, runningSpeed, 1f);
+            currentSpeed = runningSpeed;
         }
         else if (moveInput.y >= 0.1f)
         {
@@ -236,7 +235,7 @@ public class NewPlayer : MonoBehaviour
         }
 
      //moving along direction
-        Vector2 movementDirection = moveInput * currentSpeed * Time.fixedDeltaTime;
+        Vector2 movementDirection = moveInput * currentSpeed * Time.deltaTime;
         rb.velocity = transform.right * movementDirection.x + transform.forward * movementDirection.y;
        
     }
@@ -253,8 +252,8 @@ public class NewPlayer : MonoBehaviour
         {
             tpCamTransform.position = hit.point;
         }
-        else {
-
+        else 
+        {
             tpCamTransform.localPosition = new Vector3(0,0, maxDistanceDistance);
         }
     }

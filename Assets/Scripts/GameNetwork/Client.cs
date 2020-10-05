@@ -207,8 +207,8 @@ public class Client : MonoBehaviour
         //playerSessionObj.IpAddress = "10.0.2.2";
         //#endif
         //#if UNITY_PLAYER
-        //playerSessionObj.IpAddress = "192.168.43.254";// ip address if using lan
-        playerSessionObj.IpAddress = "127.0.0.1";
+        playerSessionObj.IpAddress = "192.168.43.205";// ip address if using lan
+        //playerSessionObj.IpAddress = "127.0.0.1";
         //#endif
         playerSessionObj.Port = 1935;
         playerSessionObj.GameSessionId = "gsess-abc";
@@ -283,7 +283,7 @@ public class Client : MonoBehaviour
         clientState.position = new float[3]{character.transform.position.x, character.transform.position.y, character.transform.position.z};
         clientState.angle = new float[3] { character.transform.rotation.eulerAngles.x, character.transform.rotation.eulerAngles.y, character.transform.rotation.eulerAngles.z };
         clientState.health = Convert.ToInt32(character.GetComponent<CharacterData>().CurrentHealth);
-        clientState.movementPressed = character.GetComponent<NewPlayer>().currentSpeed == 0;
+        clientState.movementPressed = character.GetComponent<NewPlayer>().currentSpeed > 100f;
         UdpMsgPacket packet = new UdpMsgPacket(PacketType.ClientState, "", MyData.playerId, MyData.team);
         packet.clientState = clientState;
         networkClient.SendPacket(packet);
@@ -330,7 +330,7 @@ public class Client : MonoBehaviour
         if (state.tick > prevTick)
         {
             prevTick = state.tick;
-            float tempDist = (tick - state.tick - 2) * 150 * 0.2f;
+            float tempDist = (tick - state.tick - 2) * 40 * 0.2f;
             try
             {
                 if (MyTeamData.teamName == "blue")
@@ -340,11 +340,11 @@ public class Client : MonoBehaviour
                         string id = state.blueTeamState[i].playerId;
                         if (MyTeamData.playerData.ContainsKey(id))
                         {
-                            if (state.blueTeamState[i].movementPressed && tempDist > 0)
+                            if (state.blueTeamState[i].movementPressed && tempDist > 4)
                             {
                                 float ay = state.blueTeamState[i].angle[1];
-                                state.blueTeamState[i].position[0] = state.blueTeamState[i].position[0] + tempDist * Mathf.Sin(ay);
-                                state.blueTeamState[i].position[2] = state.blueTeamState[i].position[2] + tempDist * Mathf.Cos(ay);
+                                state.blueTeamState[i].position[0] = state.blueTeamState[i].position[0] + tempDist * Mathf.Cos(ay);
+                                state.blueTeamState[i].position[2] = state.blueTeamState[i].position[2] + tempDist * Mathf.Sin(ay);
                             }
                             GameObject playerObject = MyTeamData.playerData[id];
                             playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(state.blueTeamState[i]);
@@ -358,11 +358,11 @@ public class Client : MonoBehaviour
                     for (int i = 0; i < state.redTeamState.Count; i++)
                     {
                         string id = state.redTeamState[i].playerId;
-                        if (state.redTeamState[i].movementPressed && tempDist > 0)
+                        if (state.redTeamState[i].movementPressed && tempDist > 4)
                         {
                             float ay = state.redTeamState[i].angle[1];
-                            state.redTeamState[i].position[0] = state.redTeamState[i].position[0] + tempDist * Mathf.Sin(ay);
-                            state.redTeamState[i].position[2] = state.redTeamState[i].position[2] + tempDist * Mathf.Cos(ay);
+                            state.redTeamState[i].position[0] = state.redTeamState[i].position[0] + tempDist * Mathf.Cos(ay);
+                            state.redTeamState[i].position[2] = state.redTeamState[i].position[2] + tempDist * Mathf.Sin(ay);
                         }
                         GameObject playerObject = OppTeamData.playerData[id];
                         playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(state.redTeamState[i]);
@@ -379,8 +379,8 @@ public class Client : MonoBehaviour
                             if (state.redTeamState[i].movementPressed && tempDist > 0)
                             {
                                 float ay = state.redTeamState[i].angle[1];
-                                state.redTeamState[i].position[0] = state.redTeamState[i].position[0] + tempDist * Mathf.Sin(ay);
-                                state.redTeamState[i].position[2] = state.redTeamState[i].position[2] + tempDist * Mathf.Cos(ay);
+                                state.redTeamState[i].position[0] = state.redTeamState[i].position[0] + tempDist * Mathf.Cos(ay);
+                                state.redTeamState[i].position[2] = state.redTeamState[i].position[2] + tempDist * Mathf.Sin(ay);
                             }
                             GameObject playerObject = MyTeamData.playerData[id];
                             playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(state.redTeamState[i]);
@@ -397,8 +397,8 @@ public class Client : MonoBehaviour
                         if (state.blueTeamState[i].movementPressed && tempDist > 0)
                         {
                             float ay = state.blueTeamState[i].angle[1];
-                            state.blueTeamState[i].position[0] = state.blueTeamState[i].position[0] + tempDist * Mathf.Sin(ay);
-                            state.blueTeamState[i].position[2] = state.blueTeamState[i].position[2] + tempDist * Mathf.Cos(ay);
+                            state.blueTeamState[i].position[0] = state.blueTeamState[i].position[0] + tempDist * Mathf.Cos(ay);
+                            state.blueTeamState[i].position[2] = state.blueTeamState[i].position[2] + tempDist * Mathf.Sin(ay);
                         }
                         GameObject playerObject = OppTeamData.playerData[id];
                         playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(state.blueTeamState[i]);

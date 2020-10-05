@@ -10,7 +10,6 @@ public class CharacterSyncScript : MonoBehaviour
 
     public bool isMoving = false;
 
-
     public Vector3 lastPos;
     public Vector3 Direction;
     public float lastY;
@@ -37,7 +36,8 @@ public class CharacterSyncScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //if(isMoving && movers.Count>0 &&)
+        count = movers.Count;
     }
 
     public void NewPlayerState(ClientState state)
@@ -73,20 +73,17 @@ public class CharacterSyncScript : MonoBehaviour
     public void AddNewMove(Vector3 end,Vector3 fang)
     {
         float dist = Vector3.Distance(lastPos,end);
-        //float dist1 = Vector3.Distance(lastPos, transform.position);
-           if ((dist > 0.1 && dist < 5) || Math.Abs(lastY-fang.y)>10)
-            {
-                //Debug.Log("New Move Added");
-                /*if (movers.Count == 10)
-                {
-                    movers.Dequeue();
-                }*/
+        float dist1 = Vector3.Distance(lastPos, transform.position);
+          if ((dist > 0.1 && dist < 5) || Math.Abs(lastY-fang.y)>10)
+           {
+                Debug.Log("New Move Added");
                 IEnumerator newMover = MoveOverSpeed(end,fang);
                 movers.Enqueue(newMover);
-                /*if (movers.Count > 10)
+                if (movers.Count > 10)
                 {
                     TransportPlayer(end,fang);
-                }*/
+                    return;
+                }
                 lastPos = new Vector3(end.x, end.y, end.z);
                 lastY = fang.y;
                 if (!isMoving && movers.Count > 0)
@@ -101,6 +98,10 @@ public class CharacterSyncScript : MonoBehaviour
             {
                 TransportPlayer(end,fang);
             }
+        if (dist1 > 5)
+        {
+            TransportPlayer(end, fang);
+        }
     }
 
     public void AddNMove(Vector3 end)
@@ -139,11 +140,11 @@ public class CharacterSyncScript : MonoBehaviour
     public IEnumerator MoveOverSpeed(Vector3 end,Vector3 fang)
     {
         // speed should be 1 unit per second
-        speed = 150f;
+        Debug.Log("Move Over Speed Started");
+        speed = 30f;
 
         Direction = (end - transform.position).normalized;
-
-
+        Debug.Log("Direction is created");
         if (inCrouch)
         {
             Crouching(Direction.x, Direction.z);
@@ -151,41 +152,56 @@ public class CharacterSyncScript : MonoBehaviour
         else
         {
             Walking(Direction.x, Direction.z);
-            if (Direction.z == 1)
+            if (Direction.z > 0.3)
             {
-                speed = 200f;
+                speed = 40f;
             }
         }
+
+        Debug.Log("w/c animation set");
 
         Quaternion q = new Quaternion();
         q.eulerAngles = fang;
         transform.rotation = q;
 
+        Debug.Log("Angle Set");
+        int lc = 0;
+        Debug.Log("end:" + end);
         while (transform.position != end)
         {
-            //Debug.Log(transform.position.z+","+end.z);
-            transform.position = Vector3.MoveTowards(transform.position, end, speed * Time.fixedDeltaTime);
-
-            yield return new WaitForFixedUpdate();
+            Debug.Log("t:"+transform.position.z+",e:"+end.z);
+            transform.position = Vector3.MoveTowards(transform.position, end, speed * 0.02f);
+            Debug.Log("lc:" + lc+", transformed");
+            lc++;
+            yield return new WaitForSeconds(0.02f);
+            Debug.Log("lc:" + lc);
+            if (lc > 10)
+            {
+                break;
+            }
         }
-        
+
+        Debug.Log("Transformation fixed");
+
         if (movers.Count > 0)
         {
-            //Debug.Log("Next Move Enqued");
+            Debug.Log("Next Move Enqued");
             StartCoroutine(movers.Dequeue());
         }
         else
         {
             Debug.Log("stopped");
             isMoving = false;
+            movers.Clear();
             anim.SetFloat("MoveX", 0);
             anim.SetFloat("MoveY", 0);
             anim.SetFloat("CrouchX", 0);
             anim.SetFloat("CrouchY", 0);
         }
+        
     }
 
-    public IEnumerator MoveOverSecond( Vector3 end, float seconds=0.2f)
+    public IEnumerator MoveOverSecond(Vector3 end, float seconds=0.2f)
     {
         float elapsedTime = 0;
         Vector3 startingPos = transform.position;
@@ -201,9 +217,9 @@ public class CharacterSyncScript : MonoBehaviour
         while (elapsedTime < seconds)
         {
             transform.position = Vector3.Lerp(startingPos, end, (elapsedTime / seconds));
-            elapsedTime += Time.fixedDeltaTime;
-            mt -= Time.fixedDeltaTime;
-            yield return new WaitForFixedUpdate();
+            elapsedTime += Time.deltaTime;
+            mt -= Time.deltaTime;
+            yield return new WaitForEndOfFrame();
         }
         transform.position = end;
     }
@@ -234,7 +250,6 @@ public class CharacterSyncScript : MonoBehaviour
 
     void Crouching(float X, float Y)
     {
-        
         anim.SetFloat("CrouchX", X);
         anim.SetFloat("CrouchY", Y);
         anim.SetFloat("MoveX", 0);
