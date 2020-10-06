@@ -141,7 +141,8 @@ public class CharacterSyncScript : MonoBehaviour
     {
         // speed should be 1 unit per second
         //Debug.Log("Move Over Speed Started");
-        speed = 30f;
+        float time = 0.2f;
+        speed = 20f;
 
         Direction = (end - transform.position).normalized;
         //Debug.Log("Direction is created");
@@ -174,19 +175,40 @@ public class CharacterSyncScript : MonoBehaviour
             //Debug.Log("lc:" + lc+", transformed");
             lc++;
             yield return new WaitForSeconds(0.02f);
+            time = time - 0.02f;
             //Debug.Log("lc:" + lc);
             if (lc > 10)
             {
+
+                transform.position = end;
                 break;
             }
         }
-
         //Debug.Log("Transformation fixed");
-
         if (movers.Count > 0)
         {
             Debug.Log("Next Move Enqued");
             StartCoroutine(movers.Dequeue());
+        }
+        else if (time > 0)
+        {
+            yield return new WaitForSeconds(time);
+            time = 0;
+            if (movers.Count > 0)
+            {
+                Debug.Log("Next Move Enqued");
+                StartCoroutine(movers.Dequeue());
+            }
+            else
+            {
+                Debug.Log("stopped");
+                isMoving = false;
+                movers.Clear();
+                anim.SetFloat("MoveX", 0);
+                anim.SetFloat("MoveY", 0);
+                anim.SetFloat("CrouchX", 0);
+                anim.SetFloat("CrouchY", 0);
+            }
         }
         else
         {

@@ -83,7 +83,12 @@ PrefabInstance:
     - target: {fileID: -927199367670048503, guid: 381f7a7fdef6b08458ea17e0b7657c23,
         type: 3}
       propertyPath: m_Name
-      value: Sci-Fi walls Final_done
+      value: Sci-Fi walls Final_done Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 381f7a7fdef6b08458ea17e0b7657c23,
+        type: 3}
+      propertyPath: m_TagString
+      value: Maze
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 381f7a7fdef6b08458ea17e0b7657c23, type: 3}

@@ -20,6 +20,10 @@ public class ClientState
     public int tracersRemaining;
     public int bulletsLeft;
 
+    public bool bulletHit;
+    public string bulletHitId;
+    public float[] bulletHitPosition;
+
     public int reloadStartTick;
 
     public int stateType;

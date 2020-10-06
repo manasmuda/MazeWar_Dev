@@ -417,6 +417,7 @@ public class Client : MonoBehaviour
     public void ShootAction(ClientState state)
     {
         UdpMsgPacket packet = new UdpMsgPacket(PacketType.Shoot,"",MyData.playerId,MyData.team);
+        packet.clientState = state;
         networkClient.SendPacket(packet);
     }
 
@@ -516,12 +517,14 @@ public class Client : MonoBehaviour
         if (team == MyTeamData.teamName)
         {
             GameObject tempObject = Instantiate(MyTeamData.charPrefab, pos, MyTeamData.spwanDirection);
+            tempObject.GetComponent<CharacterData>().id = id;
             MyTeamData.playerData.Add(id, tempObject);
             miniMapCamera.GetComponent<MiniMapCamera>().AddPlayer(tempObject);
         }
         else
         {
             GameObject tempObject = Instantiate(OppTeamData.charPrefab, pos, OppTeamData.spwanDirection);
+            tempObject.GetComponent<CharacterData>().id = id;
             OppTeamData.playerData.Add(id, tempObject);
         }
     }

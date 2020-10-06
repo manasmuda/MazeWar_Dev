@@ -14,7 +14,7 @@ public class CharacterData : MonoBehaviour
 
     public Text PlayerName;
 
-
+    public string id;
 
     void Start()
     {
@@ -76,39 +76,11 @@ public class CharacterData : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)// You can change this to Trigger if you want
-    {
-        if(collision.gameObject.tag == "Medic")// Medium Health kit for Player
-        {
-            Addhealth(50);
-        }
-
-        if (collision.gameObject.tag == "Medikit")// Large Health kit for Player
-        {
-            Addhealth(100);
-        }
-
-        if (collision.gameObject.tag == "Enemy")// Damage for Player by 
-        {
-            TakeDamage(10);
-        }
-
-        if(collision.gameObject.tag == "Upgrade")// Upgrade for Player
-        {
-            UpgradeHealth(200);
-        }
-
-        if(collision.gameObject.tag =="Player")// Damage for Enemy by Player
-        {
-            TakeDamage(20);
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Bullet")
         {
-            Debug.Log("Damaging the player");
+            Debug.Log("Hit the player");
             TakeDamage(damageAmount);
             //Destroy(other.gameObject, 0.5f);
         }
