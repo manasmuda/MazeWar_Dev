@@ -8,6 +8,7 @@ TagManager:
   - Bullet
   - PlayerPointer
   - FX
+  - wall
   layers:
   - Default
   - TransparentFX

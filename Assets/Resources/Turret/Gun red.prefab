@@ -210,6 +210,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5668830760677491122}
   - component: {fileID: 5668830760677491125}
+  - component: {fileID: 17955149}
   m_Layer: 0
   m_Name: Rotator
   m_TagString: Untagged
@@ -245,21 +246,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11618aaa61dd16146b007983f348a2ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEntered: 0
-  canShoot: 0
-  radius: 8
-  bulletForce: 50
   turnSpeed: 1
-  fireRate: 1
-  playerLayer:
-    serializedVersion: 2
-    m_Bits: 512
-  Offset: {x: 0, y: 0, z: 0}
-  rotator: {fileID: 5668830760677491122}
+  isEntered: 0
+  radius: 0.3
   targetToAttack: {fileID: 0}
+  canShoot: 0
+  fireRate: 1
+  bulletForce: 50
   bulletSpawnPosition: {fileID: 5668830759823717320}
   bulletPrefab: {fileID: 6056232748512259840, guid: d3fd2ffa5f2b71744b09822185c45599,
     type: 3}
+--- !u!135 &17955149
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5668830760677491123}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.25
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &7430525755519712457
 GameObject:
   m_ObjectHideFlags: 0
@@ -283,7 +292,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7430525755519712457}
-  m_LocalRotation: {x: -0, y: -0.01471293, z: -0, w: 0.9998918}
+  m_LocalRotation: {x: 0, y: -0.0147125395, z: 0, w: 0.99989176}
   m_LocalPosition: {x: 12.71, y: 0.8, z: -0.07}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children:
