@@ -247,9 +247,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnSpeed: 1
-  isEntered: 0
   radius: 0.3
-  targetToAttack: {fileID: 0}
+  targets: []
+  currentTarget: {fileID: 0}
   canShoot: 0
   fireRate: 1
   bulletForce: 50
