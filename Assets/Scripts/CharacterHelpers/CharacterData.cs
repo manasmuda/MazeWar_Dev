@@ -8,20 +8,23 @@ public class CharacterData : MonoBehaviour
 
     public float MaxHealth = 100;
     public float CurrentHealth;
-    public float damageAmount =20;
 
     public Slider healthSlider;
 
     public Text PlayerName;
 
     public string id;
+    public string team;
 
     void Start()
     {
         CurrentHealth = MaxHealth; // Assigning the Variables
         healthSlider.value = (CurrentHealth / MaxHealth);
-        PlayerName = FindObjectOfType<Text>();
-
+        //PlayerName = FindObjectOfType<Text>();
+        if (healthSlider == null)
+        {
+            healthSlider = GameObject.Find("Canvas/PlayerHealth/Slider").GetComponent<Slider>();
+        }
     }
 
     
@@ -81,7 +84,7 @@ public class CharacterData : MonoBehaviour
         if (other.gameObject.tag == "Bullet")
         {
             Debug.Log("Hit the player");
-            TakeDamage(damageAmount);
+            //TakeDamage(damageAmount);
             //Destroy(other.gameObject, 0.5f);
         }
     }

@@ -13,6 +13,18 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.0001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1885390250729368313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3028725805180202464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6220c3345cb8ca249a83e6db9bbe97da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &3215389246115083928
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -100,10 +112,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: RedGunBullet Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 474964187259329400, guid: 76b3927b9f183f8469c190f8f98adf5c,
+        type: 3}
+      propertyPath: m_TagString
+      value: Bullet
+      objectReference: {fileID: 0}
     - target: {fileID: 476305733625777124, guid: 76b3927b9f183f8469c190f8f98adf5c,
         type: 3}
       propertyPath: m_LocalPosition.z
       value: -2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 505550800077018712, guid: 76b3927b9f183f8469c190f8f98adf5c,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 76b3927b9f183f8469c190f8f98adf5c, type: 3}

@@ -267,6 +267,10 @@ public class NetworkClient
         {
 			clientScript.HandleGameState(packet.gameState); 
         }
+		else if (packet.type == PacketType.Shoot)
+        {
+			clientScript.HandleOtherShoot(packet);
+        }
     }
 
 	private void HandleReject()

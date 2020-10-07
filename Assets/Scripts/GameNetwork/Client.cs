@@ -324,6 +324,37 @@ public class Client : MonoBehaviour
         roomId = null;
     }
 
+    public void HandleOtherShoot(UdpMsgPacket packet)
+    {
+        if (packet.clientState.playerId != MyData.playerId)
+        {
+            Dictionary<string,ClientState> myStates = null;
+            Dictionary<string,ClientState> oppStates = null;
+            if (MyData.team == "blue")
+            {
+                myStates = packet.gameState.blueTeamState;
+                oppStates = packet.gameState.redTeamState;
+            }
+            else
+            {
+                myStates = packet.gameState.redTeamState;
+                oppStates = packet.gameState.blueTeamState;
+            }
+            if (packet.clientState.team == MyData.team)
+            {
+                CharacterData shooterdata = MyTeamData.playerData[packet.clientState.playerId].GetComponent<CharacterData>();
+                CharacterData hitdata = OppTeamData.playerData[packet.clientState.bulletHitId].GetComponent<CharacterData>();
+                hitdata.SyncHealth(oppStates[packet.clientState.bulletHitId].health);
+            }
+            else
+            {
+                CharacterData shooterdata = OppTeamData.playerData[packet.clientState.playerId].GetComponent<CharacterData>();
+                CharacterData hitdata = MyTeamData.playerData[packet.clientState.bulletHitId].GetComponent<CharacterData>();
+                hitdata.SyncHealth(myStates[packet.clientState.bulletHitId].health);
+            }
+        }
+    }
+
     public void HandleGameState(GameState state)
     {
         // Debug.Log("GameState handling started");
@@ -335,74 +366,70 @@ public class Client : MonoBehaviour
             {
                 if (MyTeamData.teamName == "blue")
                 {
-                    for (int i = 0; i < state.blueTeamState.Count; i++)
+                    foreach(ClientState clientState in state.blueTeamState.Values)
                     {
-                        string id = state.blueTeamState[i].playerId;
-                        if (MyTeamData.playerData.ContainsKey(id))
+                        if (MyTeamData.playerData.ContainsKey(clientState.playerId))
                         {
-                            if (state.blueTeamState[i].movementPressed && tempDist > 4)
+                            if(clientState.movementPressed && tempDist > 4)
                             {
-                                float ay = state.blueTeamState[i].angle[1];
-                                state.blueTeamState[i].position[0] = state.blueTeamState[i].position[0] + tempDist * Mathf.Cos(ay);
-                                state.blueTeamState[i].position[2] = state.blueTeamState[i].position[2] + tempDist * Mathf.Sin(ay);
+                                float ay = clientState.angle[1];
+                                clientState.position[0]=clientState.position[0] + tempDist * Mathf.Cos(ay);
+                                clientState.position[2] = clientState.position[2] + tempDist * Mathf.Cos(ay);
                             }
-                            GameObject playerObject = MyTeamData.playerData[id];
-                            playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(state.blueTeamState[i]);
-                            playerObject.GetComponent<CharacterData>().NewPlayerState(state.blueTeamState[i]);
+                            GameObject playerObject = MyTeamData.playerData[clientState.playerId];
+                            playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(clientState);
+                            playerObject.GetComponent<CharacterData>().NewPlayerState(clientState);
                         }
                         else
                         {
 
                         }
                     }
-                    for (int i = 0; i < state.redTeamState.Count; i++)
+                    foreach (ClientState clientState in state.redTeamState.Values)
                     {
-                        string id = state.redTeamState[i].playerId;
-                        if (state.redTeamState[i].movementPressed && tempDist > 4)
+                        if (clientState.movementPressed && tempDist > 4)
                         {
-                            float ay = state.redTeamState[i].angle[1];
-                            state.redTeamState[i].position[0] = state.redTeamState[i].position[0] + tempDist * Mathf.Cos(ay);
-                            state.redTeamState[i].position[2] = state.redTeamState[i].position[2] + tempDist * Mathf.Sin(ay);
+                            float ay = clientState.angle[1];
+                            clientState.position[0] = clientState.position[0] + tempDist * Mathf.Cos(ay);
+                            clientState.position[2] = clientState.position[2] + tempDist * Mathf.Cos(ay);
                         }
-                        GameObject playerObject = OppTeamData.playerData[id];
-                        playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(state.redTeamState[i]);
-                        playerObject.GetComponent<CharacterData>().NewPlayerState(state.redTeamState[i]);
+                        GameObject playerObject = OppTeamData.playerData[clientState.playerId];
+                        playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(clientState);
+                        playerObject.GetComponent<CharacterData>().NewPlayerState(clientState);
                     }
                 }
                 else
                 {
-                    for (int i = 0; i < state.redTeamState.Count; i++)
+                    foreach (ClientState clientState in state.redTeamState.Values)
                     {
-                        string id = state.redTeamState[i].playerId;
-                        if (MyTeamData.playerData.ContainsKey(id))
+                        if (MyTeamData.playerData.ContainsKey(clientState.playerId))
                         {
-                            if (state.redTeamState[i].movementPressed && tempDist > 0)
+                            if (clientState.movementPressed && tempDist > 4)
                             {
-                                float ay = state.redTeamState[i].angle[1];
-                                state.redTeamState[i].position[0] = state.redTeamState[i].position[0] + tempDist * Mathf.Cos(ay);
-                                state.redTeamState[i].position[2] = state.redTeamState[i].position[2] + tempDist * Mathf.Sin(ay);
+                                float ay = clientState.angle[1];
+                                clientState.position[0] = clientState.position[0] + tempDist * Mathf.Cos(ay);
+                                clientState.position[2] = clientState.position[2] + tempDist * Mathf.Cos(ay);
                             }
-                            GameObject playerObject = MyTeamData.playerData[id];
-                            playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(state.redTeamState[i]);
-                            playerObject.GetComponent<CharacterData>().NewPlayerState(state.redTeamState[i]);
+                            GameObject playerObject = MyTeamData.playerData[clientState.playerId];
+                            playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(clientState);
+                            playerObject.GetComponent<CharacterData>().NewPlayerState(clientState);
                         }
                         else
                         {
 
                         }
                     }
-                    for (int i = 0; i < state.blueTeamState.Count; i++)
+                    foreach (ClientState clientState in state.blueTeamState.Values)
                     {
-                        string id = state.blueTeamState[i].playerId;
-                        if (state.blueTeamState[i].movementPressed && tempDist > 0)
+                        if (clientState.movementPressed && tempDist > 4)
                         {
-                            float ay = state.blueTeamState[i].angle[1];
-                            state.blueTeamState[i].position[0] = state.blueTeamState[i].position[0] + tempDist * Mathf.Cos(ay);
-                            state.blueTeamState[i].position[2] = state.blueTeamState[i].position[2] + tempDist * Mathf.Sin(ay);
+                            float ay = clientState.angle[1];
+                            clientState.position[0] = clientState.position[0] + tempDist * Mathf.Cos(ay);
+                            clientState.position[2] = clientState.position[2] + tempDist * Mathf.Cos(ay);
                         }
-                        GameObject playerObject = OppTeamData.playerData[id];
-                        playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(state.blueTeamState[i]);
-                        playerObject.GetComponent<CharacterData>().NewPlayerState(state.blueTeamState[i]);
+                        GameObject playerObject = OppTeamData.playerData[clientState.playerId];
+                        playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(clientState);
+                        playerObject.GetComponent<CharacterData>().NewPlayerState(clientState);
                     }
                 }
             }
@@ -517,14 +544,18 @@ public class Client : MonoBehaviour
         if (team == MyTeamData.teamName)
         {
             GameObject tempObject = Instantiate(MyTeamData.charPrefab, pos, MyTeamData.spwanDirection);
-            tempObject.GetComponent<CharacterData>().id = id;
+            CharacterData tempcd = tempObject.GetComponent<CharacterData>();
+            tempcd.id = id;
+            tempcd.team = team;
             MyTeamData.playerData.Add(id, tempObject);
             miniMapCamera.GetComponent<MiniMapCamera>().AddPlayer(tempObject);
         }
         else
         {
             GameObject tempObject = Instantiate(OppTeamData.charPrefab, pos, OppTeamData.spwanDirection);
-            tempObject.GetComponent<CharacterData>().id = id;
+            CharacterData tempcd = tempObject.GetComponent<CharacterData>();
+            tempcd.id = id;
+            tempcd.team = team;
             OppTeamData.playerData.Add(id, tempObject);
         }
     }

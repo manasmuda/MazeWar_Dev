@@ -75,7 +75,7 @@ public class Shooting : MonoBehaviour
                 state.bulletsLeft = loadedBullets;
                 state.position = new float[3] { transform.position.x, transform.position.y, transform.position.z };
                 state.angle = new float[3] { transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z };
-                state.tick = clientScript.tick;
+                //state.tick = clientScript.tick;
                 state.playerId = MyData.playerId;
                 state.team = MyData.team;
                 SendShootMessage1(state);
@@ -84,7 +84,7 @@ public class Shooting : MonoBehaviour
                 temp.GetComponent<Rigidbody>().velocity = directionToGo.forward * bulletForce;
                 GameObject _muzzleflash = Instantiate(muzzleFlashPrefab, muzzleFlashSpawnPoint.position, Quaternion.Euler(0f, -90f, 0f));
                 Destroy(_muzzleflash, 2f);
-                Destroy(temp, 5f);
+                //Destroy(temp, 50f);
             }
         }
         else
@@ -129,7 +129,7 @@ public class Shooting : MonoBehaviour
                     state.bulletHitPosition= new float[3] { hit.collider.gameObject.transform.position.x, hit.collider.gameObject.transform.position.y, hit.collider.gameObject.transform.position.z };
                 }
             }
-            clientScript.ShootAction(state);
+            //clientScript.ShootAction(state);
         }
     }
 }
