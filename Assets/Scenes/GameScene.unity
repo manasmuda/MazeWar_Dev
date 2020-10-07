@@ -2015,11 +2015,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5668830760677491125, guid: 66a128b8a23037c4786742370703da09,
-        type: 3}
-      propertyPath: playerLayer.m_Bits
-      value: 512
-      objectReference: {fileID: 0}
     - target: {fileID: 7430525755519712457, guid: 66a128b8a23037c4786742370703da09,
         type: 3}
       propertyPath: m_Name
