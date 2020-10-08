@@ -6,22 +6,15 @@ public class MachineGun : MonoBehaviour
 {
     [Header("Turning Speed of the turret")]
     public float turnSpeed;
-
-    [Header("overlap Circle")]
-    public bool isEntered = false;
-    
+    [Header("Collider Radius")]
     public float radius;
-    
-    [Header("Target to attack")]
 
-  
-   public Transform targetToAttack = null;
-  //  public Transform currenttarget = null;
+    [Header("Target to attack")]
+     public List<Transform> targets = new List<Transform>();
+     public  Transform currentTarget;
 
     [Header("Firing")]
     public bool canShoot = true;
-    private bool inSight = false;
-   
     public float fireRate = 0.5f;
     public float bulletForce = 100f;
     public Transform  bulletSpawnPosition;
@@ -43,50 +36,60 @@ public class MachineGun : MonoBehaviour
     void Update()
     {
 
-
-        //direction = (new Vector3(targetToAttack.position.x, this.transform.position.y, targetToAttack.position.z) - this.transform.position);
-
         
-        if (targetToAttack != null)
+        if (targets.Count > 0)
         {
-           
-            if (inSight =Physics.Raycast(this.transform.position, direction, out hit) )
-            Debug.DrawRay(this.transform.position, direction, Color.white);
+            for (int i = 0; i < targets.Count; i++)
             {
-                direction = (new Vector3(targetToAttack.position.x, this.transform.position.y, targetToAttack.position.z) - this.transform.position).normalized;
-                if (hit.collider != null)
+
+                direction = (new Vector3(targets[i].position.x, this.transform.position.y, targets[i].position.z) - this.transform.position).normalized;
+                Debug.DrawRay(this.transform.position, direction *10f, Color.white);
+                if (Physics.Raycast(this.transform.position, direction, out hit, 10f)) 
                 {
-                    if (hit.collider.tag == "wall" || hit.collider.tag == "Maze")
+                    if (hit.collider != null)
                     {
-                        if ( targetToAttack !=null)
+                        Debug.Log(hit.collider.name + "  collider");
+                        if (hit.collider.CompareTag("wall")|| hit.collider.CompareTag("Maze") )
                         {
-                            targetToAttack = null;
+                            continue;
                         }
-
-                        
-                    }
-                    else
-                    {
-                        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
-                        this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
-
-                        if (canShoot)
+                        else
                         {
+                            if (targets[i] != null)
 
-                            if (Vector3.Angle(direction, this.transform.forward) < 5f)
                             {
-                                Fire();
+                                currentTarget = targets[i];
+                                break;
                             }
-
-                            canShoot = false;
-                            Invoke("ChangeFire", fireRate);
+                            else
+                            {
+                                currentTarget = null;
+                            }
                         }
 
+
+                    }
+                }
+
+            }
+            if (currentTarget!= null)
+            {
+                Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0f, direction.z));
+                this.transform.rotation = Quaternion.Slerp(this.transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
+
+                if (canShoot)
+                {
+
+                    if (Vector3.Angle(direction, this.transform.forward) < 5f)
+                    {
+                        Fire();
                     }
 
-
+                    canShoot = false;
+                    Invoke("ChangeFire", fireRate);
                 }
             }
+            
 
         }
 
@@ -106,30 +109,41 @@ public class MachineGun : MonoBehaviour
         bullet.GetComponent<Rigidbody>().AddForce(bulletSpawnPosition.forward * bulletForce, ForceMode.Impulse);
     }
 
-    
+
 
     private void OnTriggerStay(Collider other)
     {
-        //if (other.CompareTag("Maze") == false && other.CompareTag("wall")== false && other.CompareTag("Bullet") )
+        Debug.Log(other.name);
+        if (other.CompareTag("wall") == false || other.CompareTag("Maze") == false)
         {
-         Debug.Log(other.name + " collider");
-           if (targetToAttack == null)
+            for (int i = 0; i < targets.Count; i++)
             {
-               
-             targetToAttack = other.gameObject.transform;
-               
-            
+                if (other.transform == targets[i])
+                {
+                    return;
+                }
             }
-            
+                targets.Add(other.transform);
         }
+       
+
     }
     private void OnTriggerExit(Collider other)
     {
-        if (targetToAttack == other.gameObject.transform)
+        if (other.CompareTag("wall") == false || other.CompareTag("Maze") == false)
         {
-            targetToAttack = null;
-           
+            for (int i = 0; i < targets.Count; i++)
+            {
+                if (targets[i] == other.gameObject.transform)
+                {
+                    targets.Remove(other.gameObject.transform);
+
+                }
+
+
+            }
         }
+        
     }
 
   
