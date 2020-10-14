@@ -16,7 +16,7 @@ public class PlayerAnimations : MonoBehaviour
     }
 
     // Update is called once per frame
-    void LateUpdate()
+    void Update()
     {
       
         char_anim.SetBool("isCrouching", CrouchButton.instance.isCrouched);

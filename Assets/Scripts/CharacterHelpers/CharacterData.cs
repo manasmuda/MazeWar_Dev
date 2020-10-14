@@ -18,19 +18,20 @@ public class CharacterData : MonoBehaviour
 
     void Start()
     {
+        if (healthSlider == null)
+        {
+            healthSlider = GameObject.Find("Canvas/GamePanel/PlayerHealth/Slider").GetComponent<Slider>();
+        }
         CurrentHealth = MaxHealth; // Assigning the Variables
         healthSlider.value = (CurrentHealth / MaxHealth);
         //PlayerName = FindObjectOfType<Text>();
-        if (healthSlider == null)
-        {
-            healthSlider = GameObject.Find("Canvas/PlayerHealth/Slider").GetComponent<Slider>();
-        }
+       
     }
 
     
     void Update()
     {
-      
+        
     }
 
 
@@ -88,5 +89,4 @@ public class CharacterData : MonoBehaviour
             //Destroy(other.gameObject, 0.5f);
         }
     }
-
 }

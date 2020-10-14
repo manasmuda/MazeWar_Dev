@@ -718,7 +718,7 @@ Transform:
   m_GameObject: {fileID: 2514212490502318228}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 14.25, y: 0.21000004, z: -7.8066006}
-  m_LocalScale: {x: 1.8919, y: 1.8919, z: 1.8919}
+  m_LocalScale: {x: 1.6, y: 1.6, z: 1.6}
   m_Children:
   - {fileID: 6133694945416323760}
   - {fileID: 6848404017812312585}
@@ -780,8 +780,8 @@ MonoBehaviour:
   maxDistanceDistance: 0
   cameraSensitivity: 8
   currentSpeed: 0
-  walkSpeed: 140
-  runningSpeed: 230
+  walkSpeed: 25
+  runningSpeed: 40
   moveInputDeadZone: 10
   cameraPitch: 0
   maxClamp: 20
@@ -802,9 +802,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 100
   CurrentHealth: 0
-  damageAmount: 20
   healthSlider: {fileID: 0}
   PlayerName: {fileID: 0}
+  id: 
+  team: 
 --- !u!114 &2514212490502318231
 MonoBehaviour:
   m_ObjectHideFlags: 0

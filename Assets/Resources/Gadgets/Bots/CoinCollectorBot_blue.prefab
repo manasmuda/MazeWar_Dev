@@ -2012,11 +2012,10 @@ GameObject:
   - component: {fileID: 353122531107942091}
   - component: {fileID: 353122531107942090}
   - component: {fileID: 353122531107942103}
-  - component: {fileID: 353122531107942100}
   - component: {fileID: 353122531107942101}
-  - component: {fileID: 5474948065674939825}
+  - component: {fileID: 8771495722753700666}
   m_Layer: 8
-  m_Name: CoinCollectorBot(B)
+  m_Name: CoinCollectorBot_blue
   m_TagString: Bot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2031,7 +2030,7 @@ Transform:
   m_GameObject: {fileID: 9093714943513199364}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -54.52, y: 0.1, z: -53.24}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
   - {fileID: 8414429382087735961}
   - {fileID: 6039887216182375251}
@@ -2065,8 +2064,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.3487091, y: 3.7361042, z: 1}
-  m_Center: {x: -0.021232605, y: 1.3680521, z: 0}
+  m_Size: {x: 1.3487091, y: 3.3404317, z: 1}
+  m_Center: {x: -0.021232614, y: 1.565889, z: 0}
 --- !u!95 &353122531107942103
 Animator:
   serializedVersion: 3
@@ -2086,28 +2085,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!195 &353122531107942100
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9093714943513199364}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 0
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!114 &353122531107942101
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2117,15 +2094,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 9093714943513199364}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f974c2c1fd0a63c45a756dc194818593, type: 3}
+  m_Script: {fileID: 11500000, guid: da9a1655806181d45935ebf54473a90c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinParent: {fileID: 0}
-  spawn: {fileID: 0}
-  Coins: []
-  isSearching: 1
-  isChecking: 0
---- !u!114 &5474948065674939825
+  team: 1
+  playerID: 0
+  botHealth: 0
+--- !u!114 &8771495722753700666
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2134,12 +2109,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 9093714943513199364}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0c40088efb46ac4a9345338d08bef78, type: 3}
+  m_Script: {fileID: 11500000, guid: beef7b8d05047df49a64e396be66b1c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  team: 1
-  playerID: 0
-  botHealth: 0
 --- !u!1 &9152364305706319453
 GameObject:
   m_ObjectHideFlags: 0

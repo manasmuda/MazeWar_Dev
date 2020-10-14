@@ -29,8 +29,8 @@ public class BulletScript : MonoBehaviour
         if (other.gameObject.tag == "Player")
         {
             Debug.Log("Bullect Hit Player");
-            other.gameObject.GetComponent<CharacterData>().TakeDamage(damage);
-            Destroy(gameObject);
+            //other.gameObject.GetComponent<CharacterData>().TakeDamage(damage);
+            Destroy(gameObject,0.2f);
             //state.bulletHit = true;
             //state.bulletHitId = other.gameObject.GetComponent<CharacterData>().id;
             //state.bulletHitPosition = new float[3] { other.gameObject.transform.position.x, other.gameObject.transform.position.y, other.gameObject.transform.position.z };

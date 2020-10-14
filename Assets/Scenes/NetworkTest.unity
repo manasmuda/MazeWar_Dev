@@ -516,7 +516,8 @@ MonoBehaviour:
   tickCounter: 0
   roomId: 
   mazeController: {fileID: 0}
-  character: {fileID: 0}
+  character: {fileID: 6596069339946972799, guid: b9e28ea3f94ef8a41884ac86f209472a,
+    type: 3}
   coinPrefab: {fileID: 2645964641769743038, guid: 166f6656dec8c1f4d96eaaf1f259691e,
     type: 3}
   mainCharPrefab: {fileID: 2514212490502318228, guid: caec77281571d0442a6a147b7b72f43b,
@@ -525,7 +526,7 @@ MonoBehaviour:
     type: 3}
   redCharPrefab: {fileID: 6596069339946972799, guid: b9e28ea3f94ef8a41884ac86f209472a,
     type: 3}
-  playerPointer: {fileID: 2169608907344981087, guid: 49a9153a2afd045428df8a5fa1272b35,
+  playerPointer: {fileID: 2726717567229434022, guid: 0c787f200ea007748a7ed7fa7b2f5abc,
     type: 3}
 --- !u!4 &464187047
 Transform:

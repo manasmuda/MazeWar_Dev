@@ -37,7 +37,7 @@ public class MeshCombiner : MonoBehaviour
         int i = 1;
         while (i < meshFilters.Length)
         {
-            Debug.Log(meshFilters[i].sharedMesh.subMeshCount);
+            //Debug.Log(meshFilters[i].sharedMesh.subMeshCount);
             for(int j = 0; j < meshFilters[i].sharedMesh.subMeshCount; j++)
             {
                 CombineInstance combine = new CombineInstance();

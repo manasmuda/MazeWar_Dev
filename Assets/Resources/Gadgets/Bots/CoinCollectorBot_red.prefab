@@ -1049,7 +1049,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: db73d1f855e19094aa6627ac56a32d51, type: 2}
+  - {fileID: -6629797300637803691, guid: 8995cfe27bce37645a06092e492e8d7d, type: 3}
   - {fileID: -8392538173595082402, guid: a2c1ff385cc2f3a47ae653a357bb5f06, type: 3}
   - {fileID: -6629797300637803691, guid: a2c1ff385cc2f3a47ae653a357bb5f06, type: 3}
   m_StaticBatchInfo:
@@ -1699,11 +1699,10 @@ GameObject:
   - component: {fileID: 4730435326629474964}
   - component: {fileID: 4730435326629474967}
   - component: {fileID: 4730435326629474966}
-  - component: {fileID: 4730435326629474953}
   - component: {fileID: 4730435326629474952}
-  - component: {fileID: 4730435326629474955}
+  - component: {fileID: -6244838247042037794}
   m_Layer: 8
-  m_Name: CoinCollectorBot(R)
+  m_Name: CoinCollectorBot_red
   m_TagString: Bot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1718,7 +1717,7 @@ Transform:
   m_GameObject: {fileID: 4730435326629474954}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -53.1, y: 0.1, z: -53.24}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
   - {fileID: 4730435327221078317}
   - {fileID: 4730435326107536208}
@@ -1752,8 +1751,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.3487091, y: 3.7361042, z: 1}
-  m_Center: {x: -0.021232605, y: 1.3680521, z: 0}
+  m_Size: {x: 1.3487091, y: 3.3565166, z: 1}
+  m_Center: {x: -0.021232614, y: 1.5578461, z: 0}
 --- !u!95 &4730435326629474966
 Animator:
   serializedVersion: 3
@@ -1773,28 +1772,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!195 &4730435326629474953
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4730435326629474954}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 0
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!114 &4730435326629474952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1804,15 +1781,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 4730435326629474954}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f974c2c1fd0a63c45a756dc194818593, type: 3}
+  m_Script: {fileID: 11500000, guid: da9a1655806181d45935ebf54473a90c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  coinParent: {fileID: 0}
-  spawn: {fileID: 0}
-  Coins: []
-  isSearching: 1
-  isChecking: 0
---- !u!114 &4730435326629474955
+  team: 0
+  playerID: 0
+  botHealth: 0
+--- !u!114 &-6244838247042037794
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1821,12 +1796,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4730435326629474954}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e0c40088efb46ac4a9345338d08bef78, type: 3}
+  m_Script: {fileID: 11500000, guid: beef7b8d05047df49a64e396be66b1c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  team: 0
-  playerID: 0
-  botHealth: 0
 --- !u!1 &4730435326654244846
 GameObject:
   m_ObjectHideFlags: 0

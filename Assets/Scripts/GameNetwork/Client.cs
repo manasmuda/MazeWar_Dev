@@ -43,7 +43,6 @@ public class Client : MonoBehaviour
     //Cognito credentials for sending signed requests to the API
     //public static Amazon.Runtime.ImmutableCredentials cognitoCredentials = null;
 
-
     public static Client clientInstance = null;
 
     private AWSClient awsClient;    
@@ -70,6 +69,8 @@ public class Client : MonoBehaviour
     private GameObject playerPointer;
 
     private GameObject miniMapCamera;
+
+    public bool pauseUpdate = false;
 
     void Awake()
     {
@@ -191,7 +192,6 @@ public class Client : MonoBehaviour
 	}
 #endif
 
-
     public void connectionCB(bool x)
     {
         if (!x)
@@ -207,7 +207,7 @@ public class Client : MonoBehaviour
         //playerSessionObj.IpAddress = "10.0.2.2";
         //#endif
         //#if UNITY_PLAYER
-        playerSessionObj.IpAddress = "192.168.43.205";// ip address if using lan
+        playerSessionObj.IpAddress = "192.168.43.254";// ip address if using lan
         //playerSessionObj.IpAddress = "127.0.0.1";
         //#endif
         playerSessionObj.Port = 1935;
@@ -222,7 +222,7 @@ public class Client : MonoBehaviour
     void Update()
     {
         //this.ProcessMessages();
-        if (connectionSuccess)
+        if (connectionSuccess && !pauseUpdate)
         {
             // Only send updates 5 times per second to avoid flooding server with messages
             networkClient.RecieveUdp();
@@ -287,7 +287,7 @@ public class Client : MonoBehaviour
         UdpMsgPacket packet = new UdpMsgPacket(PacketType.ClientState, "", MyData.playerId, MyData.team);
         packet.clientState = clientState;
         networkClient.SendPacket(packet);
-        Debug.Log("Client State Sent");
+        //Debug.Log("Client State Sent");
     }
 
     public void GameReady(int timeLeft)
@@ -326,6 +326,7 @@ public class Client : MonoBehaviour
 
     public void HandleOtherShoot(UdpMsgPacket packet)
     {
+        Debug.Log("Handle Other Shoot");
         if (packet.clientState.playerId != MyData.playerId)
         {
             Dictionary<string,ClientState> myStates = null;
@@ -437,7 +438,7 @@ public class Client : MonoBehaviour
             {
                 Debug.Log(e);
             }
-            Debug.Log("Gamestate handling ended");
+            //Debug.Log("Gamestate handling ended");
         }
     }
 
@@ -482,13 +483,13 @@ public class Client : MonoBehaviour
         {
             Instantiate(coinPrefab, _coinPos[i], Quaternion.identity, coinParent.transform);
         }
-
     }
 
 
     public void HandlePlayerData()
     {
         MyTeamData.teamName = MyData.team;
+
         if (MyData.team == "red")
         {
             MyTeamData.charPrefab = redCharPrefab;

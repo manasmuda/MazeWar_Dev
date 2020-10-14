@@ -141,7 +141,7 @@ public class CharacterSyncScript : MonoBehaviour
     {
         // speed should be 1 unit per second
         //Debug.Log("Move Over Speed Started");
-        float time = 0.2f;
+        float time = 0.25f;
         speed = 20f;
 
         Direction = (end - transform.position).normalized;

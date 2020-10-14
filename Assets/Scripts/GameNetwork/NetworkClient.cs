@@ -6,7 +6,6 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
-using System.Threading;
 
 // *** NETWORK CLIENT FOR TCP CONNECTIONS WITH THE SERVER ***
 
@@ -74,7 +73,6 @@ public class NetworkClient
 			//Debug.Log("Received: " + msgPacket.message);
 			HandleUdpMessage(msgPacket);
 		}
-
 	}
 
 	private void UDPRecieveCallBack(IAsyncResult result)
@@ -291,12 +289,47 @@ public class NetworkClient
 	}
 
 	private void HandlePlayerData(SimpleMessage msg)
-    {
+	{
 		Debug.Log("Recieved Player Data");
-		UdpMsgPacket packet = new UdpMsgPacket(PacketType.UDPConnect,"",msg.playerId,msg.team);
+		UdpMsgPacket packet = new UdpMsgPacket(PacketType.UDPConnect, "", msg.playerId, msg.team);
 		Debug.Log("Team: " + packet.team);
 		MyData.playerId = msg.playerId;
 		MyData.team = msg.team;
+		string hg1 = msg.stringArrData[0];
+		string hg2 = msg.stringArrData[1];
+		string lg1 = msg.stringArrData[2];
+		string lg2 = msg.stringArrData[3];
+		Gadget lgadget1=null;
+		Gadget lgadget2=null;
+		Gadget hgadget1=null;
+		Gadget hgadget2=null;
+		Debug.Log(lg1);
+		try
+		{
+			GameObject lg1object = Resources.Load<GameObject>("GadgetControllers/" + lg1 + "GadgetController");
+			lg1object = GameObject.Instantiate(lg1object, Vector3.zero, Quaternion.identity);
+			lgadget1 = lg1object.GetComponent<Gadget>();
+			GameObject lg2object = Resources.Load<GameObject>("GadgetControllers/" + lg2 + "GadgetController");
+			lg2object = GameObject.Instantiate(lg2object, Vector3.zero, Quaternion.identity);
+			lgadget2 = lg2object.GetComponent<Gadget>();
+			GameObject hg1object = Resources.Load<GameObject>("GadgetControllers/" + hg1 + "GadgetController");
+			hg1object = GameObject.Instantiate(hg1object, Vector3.zero, Quaternion.identity);
+			hgadget1 = hg1object.GetComponent<Gadget>();
+			GameObject hg2object = Resources.Load<GameObject>("GadgetControllers/" + hg2 + "GadgetController");
+			hg2object = GameObject.Instantiate(hg2object, Vector3.zero, Quaternion.identity);
+			hgadget2 = hg2object.GetComponent<Gadget>();
+		}
+		catch (Exception e)
+		{
+			Debug.LogError(e);
+			Debug.LogError(e.Message);
+			Debug.LogError(e.InnerException);
+		}
+		MyData.LGadget1 = lgadget1;
+		MyData.HGadget1 = hgadget1;
+		MyData.LGadget2 = lgadget2;
+		MyData.HGadget2 = hgadget2;
+		MyData.gadgets = new Gadget[4]{hgadget1, hgadget2, lgadget1, lgadget2};
 		clientScript.HandlePlayerData();
 		SendPacket(packet);
     }
@@ -305,6 +338,7 @@ public class NetworkClient
     {
 		Debug.Log("Player Accepted");
 		SceneManager.LoadScene("GameScene");// Remove 
+		clientScript.pauseUpdate = true;
     }
 
 	private void HandleOtherPlayerLeft(SimpleMessage message)
@@ -380,11 +414,11 @@ public class NetworkClient
 
 	private void HandleServerTick(SimpleMessage msg)
 	{
-		Debug.Log("Handle Server Tick");
+		//Debug.Log("Handle Server Tick");
 		int ms = DateTime.UtcNow.Millisecond;
 
 		int dif = ms - msg.time;
-		Debug.Log(dif);
+		//Debug.Log(dif);
 		if (dif > 0) { 
 			int tt = dif / 200;
 			int ttc = dif % 200;

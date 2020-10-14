@@ -34,9 +34,7 @@ public class Shooting : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-
     {
-      
         if (shooterButton.pressed)
          {
                 //if the player not moving and standing for shoot
@@ -75,7 +73,7 @@ public class Shooting : MonoBehaviour
                 state.bulletsLeft = loadedBullets;
                 state.position = new float[3] { transform.position.x, transform.position.y, transform.position.z };
                 state.angle = new float[3] { transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z };
-                //state.tick = clientScript.tick;
+                state.tick = clientScript.tick;
                 state.playerId = MyData.playerId;
                 state.team = MyData.team;
                 SendShootMessage1(state);
@@ -91,45 +89,47 @@ public class Shooting : MonoBehaviour
         {
             //Show no bullets or something
         }
+    }
 
-        IEnumerator SendShootMessage(ClientState state)
+    IEnumerator SendShootMessage(ClientState state)
+    {
+        float t = 0f;
+        while (t < 0.07f)
         {
-            float t = 0f;
-            while (t < 0.07f)
-            {
-                if (state.bulletHit)
-                {
-                    clientScript.ShootAction(state);
-                    break;
-                }
-                yield return new WaitForSeconds(0.02f);
-                t = t + 0.02f;
-                
-            }
-            if (t > 0.07f)
+            if (state.bulletHit)
             {
                 clientScript.ShootAction(state);
-            }   
-        }
-
-        void SendShootMessage1(ClientState state)
-        {
-            Ray ray = new Ray();
-            RaycastHit hit;
-
-            ray.origin = bulletSpawnPos.position;
-            ray.direction = directionToGo.forward;
-            if(Physics.Raycast(ray,out hit))
-            {
-                if (hit.collider.gameObject.tag == "Player")
-                {
-                    Debug.Log("Raycast Hit Player");
-                    state.bulletHit = true;
-                    state.bulletHitId = hit.collider.gameObject.GetComponent<CharacterData>().id;
-                    state.bulletHitPosition= new float[3] { hit.collider.gameObject.transform.position.x, hit.collider.gameObject.transform.position.y, hit.collider.gameObject.transform.position.z };
-                }
+                break;
             }
-            //clientScript.ShootAction(state);
+            yield return new WaitForSeconds(0.02f);
+            t = t + 0.02f;
+
         }
+        if (t > 0.07f)
+        {
+            clientScript.ShootAction(state);
+        }
+    }
+
+    void SendShootMessage1(ClientState state)
+    {
+        Ray ray = new Ray();
+        RaycastHit hit;
+
+        ray.origin = bulletSpawnPos.position;
+        ray.direction = directionToGo.forward;
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider.gameObject.tag == "Player")
+            {
+                Debug.Log("Raycast Hit Player");
+                state.bulletHit = true;
+                CharacterData cd = hit.collider.gameObject.GetComponent<CharacterData>();
+                cd.TakeDamage(10);
+                state.bulletHitId = cd.id;
+                state.bulletHitPosition = new float[3] { hit.collider.gameObject.transform.position.x, hit.collider.gameObject.transform.position.y, hit.collider.gameObject.transform.position.z };
+            }
+        }
+        clientScript.ShootAction(state);
     }
 }
