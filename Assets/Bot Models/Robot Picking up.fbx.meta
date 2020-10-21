@@ -9,7 +9,27 @@ ModelImporter:
   - first:
       74: -940235093477234348
     second: Armature|Picking up
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.004
+    second: {fileID: 2100000, guid: 45ff8c1ae7963464fbbe8848891036a1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.005
+    second: {fileID: 2100000, guid: 63e8d70667807f043b64091fc86ab0fa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.006
+    second: {fileID: 2100000, guid: 92cd25cf3ec3a124d8335c3feec18c8c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Robot.002
+    second: {fileID: 2100000, guid: 59f33b16dc7c0d249a99bd67dba407ea, type: 2}
   materials:
     materialImportMode: 1
     materialName: 0
@@ -91,7 +111,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.01
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0

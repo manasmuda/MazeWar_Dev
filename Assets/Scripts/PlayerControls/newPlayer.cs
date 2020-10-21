@@ -126,7 +126,6 @@ public class NewPlayer : MonoBehaviour
             }
             MoveCamera();
             
-        
         }
     }
 
@@ -135,7 +134,6 @@ public class NewPlayer : MonoBehaviour
         
         for (int i = 0; i < Input.touchCount; i++)
         {
-
             touch = Input.GetTouch(i);
 
             // Check each touch's phase

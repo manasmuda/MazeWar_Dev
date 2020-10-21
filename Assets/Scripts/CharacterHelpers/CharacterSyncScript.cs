@@ -142,7 +142,7 @@ public class CharacterSyncScript : MonoBehaviour
         // speed should be 1 unit per second
         //Debug.Log("Move Over Speed Started");
         float time = 0.25f;
-        speed = 20f;
+        speed = 85f;
 
         Direction = (end - transform.position).normalized;
         //Debug.Log("Direction is created");
@@ -155,7 +155,7 @@ public class CharacterSyncScript : MonoBehaviour
             Walking(Direction.x, Direction.z);
             if (Direction.z > 0.3)
             {
-                speed = 40f;
+                speed = 140f;
             }
         }
 

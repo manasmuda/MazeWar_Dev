@@ -12,6 +12,8 @@ public class Gadget : MonoBehaviour
     public bool mapChange;
     public int reloadTime;
     public int useLimit;
+    public bool timerGadget;
+    public int useTime;
     public GameObject gadetPrefab;
     public GameObject character;
 

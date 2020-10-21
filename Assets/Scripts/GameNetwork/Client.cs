@@ -51,9 +51,7 @@ public class Client : MonoBehaviour
     [SerializeField]
     private MazeController mazeController;
 
-    [SerializeField]
-    private GameObject character;
-
+    public GameObject character;
 
     public GameObject coinPrefab;
 
@@ -329,6 +327,7 @@ public class Client : MonoBehaviour
         Debug.Log("Handle Other Shoot");
         if (packet.clientState.playerId != MyData.playerId)
         {
+            Debug.Log("Handle Other Shoot Not My Shot");
             Dictionary<string,ClientState> myStates = null;
             Dictionary<string,ClientState> oppStates = null;
             if (MyData.team == "blue")
@@ -524,6 +523,8 @@ public class Client : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
 
         character = Instantiate(mainCharPrefab, pos, MyTeamData.spwanDirection);
+        character.GetComponent<CharacterData>().id = MyData.playerId;
+        character.GetComponent<CharacterData>().team = MyData.team;
         playerPointer = Instantiate(playerPointer, new Vector3(pos.x, 10f, pos.z),MyTeamData.spwanDirection);
         MiniMapCamera mmc = miniMapCamera.GetComponent<MiniMapCamera>();
         mmc.pointer = playerPointer;

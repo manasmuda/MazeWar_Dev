@@ -17,6 +17,8 @@ public class CoinCollectBotGadget : Gadget
         mapChange = true;
         reloadTime = 60;
         useLimit = 5;
+        timerGadget = false;
+        useTime = 0;
         //load prefab
     }
 
