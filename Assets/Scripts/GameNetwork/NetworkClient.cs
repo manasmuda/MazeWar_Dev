@@ -252,6 +252,10 @@ public class NetworkClient
 			HandlePlayerGameData(msg);
 		else if (msg.messageType == MessageType.ServerTick)
 			HandleServerTick(msg);
+		else if (msg.messageType == MessageType.GadgetCallAction)
+			HandleGadgetResponse(msg);
+		else if (msg.messageType == MessageType.CoinPicked)
+			clientScript.HandleCoinPicked(msg);
 		else
 		{
 			Client.messagesToProcess.Add(msg);
@@ -356,7 +360,7 @@ public class NetworkClient
 	private void HandleGameReady(SimpleMessage msg)
     {
 		Debug.Log("Game Ready");
-		int ms = DateTime.UtcNow.Millisecond;
+		int ms = DateTime.Now.Millisecond;
 		int dif = ms - msg.time;
 		int tr = dif / 1000;
 		Debug.Log("Time Remaining " + tr);
@@ -370,14 +374,15 @@ public class NetworkClient
 	private void HandleGameStarted(SimpleMessage msg)
     {
 		Debug.Log("Game Started");
-		int ms = DateTime.UtcNow.Millisecond;
+		int ms = DateTime.Now.Millisecond;
 		int dif = ms - msg.time;
 		int tt = dif / 200;
 		int ttc = dif % 200;
 		float ttcf = ((float)ttc) / 1000f;
 		clientScript.tick = tt;
 		clientScript.tickCounter = ttcf;
-    }
+		clientScript.gameStarted = true;
+	}
 
 	private void HandlePlayerGameData(SimpleMessage msg)
     {
@@ -412,23 +417,50 @@ public class NetworkClient
 		}
     }
 
+	private void HandleGadgetResponse(SimpleMessage msg)
+    {
+		if(msg.stringArrData[0]==MyData.playerId)
+			GadgetController.instance.GadgetSelect(msg.intData,msg.stringData);
+        else
+        {
+			//Handle other team gaget spawn
+			GameObject gadgetPrefab = Resources.Load<GameObject>("Gadgets/" + msg.stringData + "/" + msg.stringData + "_" + msg.stringArrData[1]);
+			Vector3 vector3 = new Vector3(msg.floatArrData[0], msg.floatArrData[1], msg.floatArrData[2]);
+			GameObject gadgetObject = GameObject.Instantiate(gadgetPrefab, vector3, Quaternion.identity);
+            if (msg.stringArrData[1] == MyTeamData.teamName)
+            {
+				MyTeamData.gadgetObjects.Add(msg.stringArrData[2], gadgetObject);
+            }
+            else
+            {
+				OppTeamData.gadgetObjects.Add(msg.stringArrData[2], gadgetObject);
+            }
+        }
+    }
+
 	private void HandleServerTick(SimpleMessage msg)
 	{
 		//Debug.Log("Handle Server Tick");
-		int ms = DateTime.UtcNow.Millisecond;
+		int ms = DateTime.Now.Millisecond;
 
 		int dif = ms - msg.time;
-		//Debug.Log(dif);
-		if (dif > 0) { 
-			int tt = dif / 200;
-			int ttc = dif % 200;
-			float ttcf = ((float)ttc) / 1000f;
-			clientScript.tick = msg.intData + tt;
-			clientScript.tickCounter = ttcf;
-		}
-        else
-        {
-			clientScript.tick = msg.intData;
+
+		Debug.Log(dif);
+		if (clientScript.tick != msg.intData)
+		{
+			if (dif > 0)
+			{
+				int tt = dif / 200;
+				int ttc = dif % 200;
+				float ttcf = ((float)ttc) / 1000f;
+				clientScript.tick = msg.intData + tt;
+				clientScript.tickCounter = ttcf;
+			}
+			else
+			{
+				clientScript.tick = msg.intData;
+				clientScript.tickCounter = 0f;
+			}
 		}
 	}
 }

@@ -33,7 +33,7 @@ public class FlySniperGadget : Gadget
         base.Update();
     }
 
-    public override void CallAction()
+    public override void CallAction(string id = "")
     {
         base.CallAction();
         Client.clientInstance.character.GetComponent<NewPlayer>().enabled = false;
@@ -42,8 +42,9 @@ public class FlySniperGadget : Gadget
         int i = Mathf.FloorToInt((Client.clientInstance.character.transform.position.z-60f) / 6f);
         int j = Mathf.FloorToInt((60f + Client.clientInstance.character.transform.position.x) / 6f);
         Vector3 origin = new Vector3(6*j-57f,0.5f,57f-6*i);
-        curObject = GameObject.Instantiate(gadetPrefab, origin, Quaternion.identity);
-        Client.clientInstance.character.transform.position = new Vector3(origin.x, 1f, origin.z + 1.5f);
+        Quaternion q1 = Quaternion.identity;
+        q1.eulerAngles = new Vector3(0,90f,0);
+        curObject = GameObject.Instantiate(gadetPrefab, origin, q1);
         RectTransform temprect=UIElementsScript.instance.shootingButton.transform.GetComponent<RectTransform>();
         temprect.anchorMin = new Vector2(0, 0);
         temprect.anchorMax = new Vector2(0, 0);
@@ -62,6 +63,7 @@ public class FlySniperGadget : Gadget
     public override void EndAction()
     {
         base.EndAction();
+
     }
 
     IEnumerator StartUseTime()

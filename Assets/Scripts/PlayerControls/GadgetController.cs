@@ -61,9 +61,9 @@ public class GadgetController : MonoBehaviour
         Client.clientInstance.networkClient.SendMessage(message);
     }
 
-    public void GadgetSelect(int x)
+    public void GadgetSelect(int x,string id)
     {
-        MyData.gadgets[x].CallAction();
+        MyData.gadgets[x].CallAction(id);
         StartCoroutine(StartGadgetTimer(gadgetObjects[x], MyData.gadgets[x]));
     }
 

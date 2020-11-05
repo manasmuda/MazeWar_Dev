@@ -12,6 +12,7 @@ using Amazon.Lambda.Model;
 using UnityEngine.SceneManagement;
 
 using Facebook.Unity;
+using System.Linq;
 
 // *** MAIN CLIENT CLASS FOR MANAGING CLIENT CONNECTIONS AND MESSAGES ***
 
@@ -22,7 +23,7 @@ public class Client : MonoBehaviour
     public NetworkClient networkClient;
 
     private bool loading;
-    private bool gameStarted=false;
+    public bool gameStarted=false;
 
     private PlayerSessionObject playerSessionObj=new PlayerSessionObject();
 
@@ -123,7 +124,7 @@ public class Client : MonoBehaviour
         AmazonLambdaClient client = new AmazonLambdaClient(awsClient.GetCredentials(), RegionEndpoint.APSouth1);
         InvokeRequest request = new InvokeRequest
         {
-            FunctionName = "TacticalCombatGetGS",
+            FunctionName = "MazeWarGetGS",
             InvocationType = InvocationType.RequestResponse,
             Payload=  payLoadString
         };
@@ -212,7 +213,6 @@ public class Client : MonoBehaviour
         playerSessionObj.GameSessionId = "gsess-abc";
         playerSessionObj.PlayerSessionId = playerIdx;
         StartCoroutine(ConnectToServer());
-        //SceneManager.LoadScene("Game");
     }
 
 
@@ -238,7 +238,6 @@ public class Client : MonoBehaviour
                 CreateClientState();
             }
         }
-
     }
 
     IEnumerator ConnectToServer()
@@ -247,7 +246,6 @@ public class Client : MonoBehaviour
         yield return null;
 
         this.networkClient = new NetworkClient(this);
-
 
         yield return StartCoroutine(this.networkClient.DoMatchMakingAndConnect(playerSessionObj));
 
@@ -274,14 +272,19 @@ public class Client : MonoBehaviour
 
     public void CreateClientState()
     {
+        //Log("Client State Sending Started");
         ClientState clientState = new ClientState();
         clientState.tick = tick;
         clientState.playerId = MyData.playerId;
         clientState.team = MyData.team;
         clientState.position = new float[3]{character.transform.position.x, character.transform.position.y, character.transform.position.z};
         clientState.angle = new float[3] { character.transform.rotation.eulerAngles.x, character.transform.rotation.eulerAngles.y, character.transform.rotation.eulerAngles.z };
+        clientState.crouch = CrouchButton.instance.isCrouched;
         clientState.health = Convert.ToInt32(character.GetComponent<CharacterData>().CurrentHealth);
         clientState.movementPressed = character.GetComponent<NewPlayer>().currentSpeed > 100f;
+        clientState.bulletsLeft = character.GetComponent<Shooting>().loadedBullets;
+        clientState.coinsHolding = character.GetComponent<CharacterData>().coinsHolding;
+        clientState.tracersRemaining = character.GetComponent<CharacterData>().tracersLeft;
         UdpMsgPacket packet = new UdpMsgPacket(PacketType.ClientState, "", MyData.playerId, MyData.team);
         packet.clientState = clientState;
         networkClient.SendPacket(packet);
@@ -299,7 +302,7 @@ public class Client : MonoBehaviour
         yield return new WaitForSeconds(10- timeLeft / 1000);
 
         tick = 0;
-        gameStarted = true;
+        //gameStarted = true;
         Debug.Log("Lobby Ended");
 
 
@@ -361,7 +364,7 @@ public class Client : MonoBehaviour
         if (state.tick > prevTick)
         {
             prevTick = state.tick;
-            float tempDist = (tick - state.tick - 2) * 40 * 0.2f;
+            float tempDist = (tick - state.tick - 2) * 5 * 0.2f;
             try
             {
                 if (MyTeamData.teamName == "blue")
@@ -370,14 +373,45 @@ public class Client : MonoBehaviour
                     {
                         if (MyTeamData.playerData.ContainsKey(clientState.playerId))
                         {
-                            if(clientState.movementPressed && tempDist > 4)
-                            {
-                                float ay = clientState.angle[1];
-                                clientState.position[0]=clientState.position[0] + tempDist * Mathf.Cos(ay);
-                                clientState.position[2] = clientState.position[2] + tempDist * Mathf.Cos(ay);
-                            }
                             GameObject playerObject = MyTeamData.playerData[clientState.playerId];
-                            playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(clientState);
+                            if (!clientState.timerGadgetUse)
+                            {
+                                if (clientState.movementPressed && tempDist > 4)
+                                {
+                                    float ay = clientState.angle[1];
+                                    clientState.position[0] = clientState.position[0] + tempDist * Mathf.Cos(ay);
+                                    clientState.position[2] = clientState.position[2] + tempDist * Mathf.Cos(ay);
+                                }
+                                if (clientState.playerId != MyData.playerId)
+                                    playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(clientState);
+                            }
+                            //todo
+                            if (clientState.playerId == MyData.playerId)
+                            {
+                                for(int i = 0; i < clientState.autoGadgetStates.Count; i++)
+                                {
+                                    string tempid=clientState.autoGadgetStates.Keys.ElementAt(i);
+                                    AutoGadgetState tempags = clientState.autoGadgetStates.Values.ElementAt(i);
+                                    for(int j = 0; j < MyData.gadgets.Length; i++)
+                                    {
+                                        if (!MyData.gadgets[j].timerGadget && MyData.gadgets[j].GetActiveGadgets().ContainsKey(tempid))
+                                        {
+                                            //add sync state
+                                            //MyData.gadgets[j].GetActiveGadgets()[tempid].GetComponent<>
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                for(int i = 0; i < clientState.autoGadgetStates.Count; i++)
+                                {
+                                    string tempid = clientState.autoGadgetStates.Keys.ElementAt(i);
+                                    AutoGadgetState tempags = clientState.autoGadgetStates.Values.ElementAt(i);
+                                    //addsync state
+                                    //MyTeamData.gadgetObjects[tempid].GetComponent<>
+                                }
+                            }
                             playerObject.GetComponent<CharacterData>().NewPlayerState(clientState);
                         }
                         else
@@ -387,14 +421,25 @@ public class Client : MonoBehaviour
                     }
                     foreach (ClientState clientState in state.redTeamState.Values)
                     {
-                        if (clientState.movementPressed && tempDist > 4)
-                        {
-                            float ay = clientState.angle[1];
-                            clientState.position[0] = clientState.position[0] + tempDist * Mathf.Cos(ay);
-                            clientState.position[2] = clientState.position[2] + tempDist * Mathf.Cos(ay);
-                        }
                         GameObject playerObject = OppTeamData.playerData[clientState.playerId];
-                        playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(clientState);
+                        if (!clientState.timerGadgetUse)
+                        {
+                            if (clientState.movementPressed && tempDist > 4)
+                            {
+                                float ay = clientState.angle[1];
+                                clientState.position[0] = clientState.position[0] + tempDist * Mathf.Cos(ay);
+                                clientState.position[2] = clientState.position[2] + tempDist * Mathf.Cos(ay);
+                            }
+                            if (clientState.playerId != MyData.playerId)
+                                playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(clientState);
+                        }
+                        for (int i = 0; i < clientState.autoGadgetStates.Count; i++)
+                        {
+                            string tempid = clientState.autoGadgetStates.Keys.ElementAt(i);
+                            AutoGadgetState tempags = clientState.autoGadgetStates.Values.ElementAt(i);
+                            //addsync state
+                            //OppTeamData.gadgetObjects[tempid].GetComponent<>
+                        }
                         playerObject.GetComponent<CharacterData>().NewPlayerState(clientState);
                     }
                 }
@@ -404,14 +449,45 @@ public class Client : MonoBehaviour
                     {
                         if (MyTeamData.playerData.ContainsKey(clientState.playerId))
                         {
-                            if (clientState.movementPressed && tempDist > 4)
-                            {
-                                float ay = clientState.angle[1];
-                                clientState.position[0] = clientState.position[0] + tempDist * Mathf.Cos(ay);
-                                clientState.position[2] = clientState.position[2] + tempDist * Mathf.Cos(ay);
-                            }
                             GameObject playerObject = MyTeamData.playerData[clientState.playerId];
-                            playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(clientState);
+                            if (!clientState.timerGadgetUse)
+                            {
+                                if (clientState.movementPressed && tempDist > 4)
+                                {
+                                    float ay = clientState.angle[1];
+                                    clientState.position[0] = clientState.position[0] + tempDist * Mathf.Cos(ay);
+                                    clientState.position[2] = clientState.position[2] + tempDist * Mathf.Cos(ay);
+                                }
+                                
+                                if (clientState.playerId != MyData.playerId)
+                                    playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(clientState);
+                            }
+                            if (clientState.playerId == MyData.playerId)
+                            {
+                                for (int i = 0; i < clientState.autoGadgetStates.Count; i++)
+                                {
+                                    string tempid = clientState.autoGadgetStates.Keys.ElementAt(i);
+                                    AutoGadgetState tempags = clientState.autoGadgetStates.Values.ElementAt(i);
+                                    for (int j = 0; j < MyData.gadgets.Length; i++)
+                                    {
+                                        if (!MyData.gadgets[j].timerGadget && MyData.gadgets[j].GetActiveGadgets().ContainsKey(tempid))
+                                        {
+                                            //add sync state
+                                            //MyData.gadgets[j].GetActiveGadgets()[tempid].GetComponent<>
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 0; i < clientState.autoGadgetStates.Count; i++)
+                                {
+                                    string tempid = clientState.autoGadgetStates.Keys.ElementAt(i);
+                                    AutoGadgetState tempags = clientState.autoGadgetStates.Values.ElementAt(i);
+                                    //addsync state
+                                    //MyTeamData.gadgetObjects[tempid].GetComponent<>
+                                }
+                            }
                             playerObject.GetComponent<CharacterData>().NewPlayerState(clientState);
                         }
                         else
@@ -421,14 +497,26 @@ public class Client : MonoBehaviour
                     }
                     foreach (ClientState clientState in state.blueTeamState.Values)
                     {
-                        if (clientState.movementPressed && tempDist > 4)
-                        {
-                            float ay = clientState.angle[1];
-                            clientState.position[0] = clientState.position[0] + tempDist * Mathf.Cos(ay);
-                            clientState.position[2] = clientState.position[2] + tempDist * Mathf.Cos(ay);
-                        }
                         GameObject playerObject = OppTeamData.playerData[clientState.playerId];
-                        playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(clientState);
+                        if (!clientState.timerGadgetUse)
+                        {
+                            if (clientState.movementPressed && tempDist > 4)
+                            {
+                                float ay = clientState.angle[1];
+                                clientState.position[0] = clientState.position[0] + tempDist * Mathf.Cos(ay);
+                                clientState.position[2] = clientState.position[2] + tempDist * Mathf.Cos(ay);
+                            }
+
+                            if (clientState.playerId != MyData.playerId)
+                                playerObject.GetComponent<CharacterSyncScript>().NewPlayerState(clientState);
+                        }
+                        for (int i = 0; i < clientState.autoGadgetStates.Count; i++)
+                        {
+                            string tempid = clientState.autoGadgetStates.Keys.ElementAt(i);
+                            AutoGadgetState tempags = clientState.autoGadgetStates.Values.ElementAt(i);
+                            //addsync state
+                            //OppTeamData.gadgetObjects[tempid].GetComponent<>
+                        }
                         playerObject.GetComponent<CharacterData>().NewPlayerState(clientState);
                     }
                 }
@@ -446,6 +534,11 @@ public class Client : MonoBehaviour
         UdpMsgPacket packet = new UdpMsgPacket(PacketType.Shoot,"",MyData.playerId,MyData.team);
         packet.clientState = state;
         networkClient.SendPacket(packet);
+    }
+
+    public void HandleCoinPicked(SimpleMessage msg)
+    {
+        GameData.coinObjects[msg.intData].SetActive(false);
     }
 
     //Remove Coroutines for functions below this after detailed matchmaking
@@ -477,10 +570,11 @@ public class Client : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         GameObject coinParent = new GameObject("CoinsParent");
-
+        GameData.coinObjects = new List<GameObject>();
         for(int i =0; i< _coinPos.Length;i++)
         {
-            Instantiate(coinPrefab, _coinPos[i], Quaternion.identity, coinParent.transform);
+            GameObject coinObject=Instantiate(coinPrefab, _coinPos[i], Quaternion.identity, coinParent.transform);
+            GameData.coinObjects.Add(coinObject);
         }
     }
 
@@ -525,6 +619,7 @@ public class Client : MonoBehaviour
         character = Instantiate(mainCharPrefab, pos, MyTeamData.spwanDirection);
         character.GetComponent<CharacterData>().id = MyData.playerId;
         character.GetComponent<CharacterData>().team = MyData.team;
+        MyTeamData.playerData.Add(MyData.playerId, character);
         playerPointer = Instantiate(playerPointer, new Vector3(pos.x, 10f, pos.z),MyTeamData.spwanDirection);
         MiniMapCamera mmc = miniMapCamera.GetComponent<MiniMapCamera>();
         mmc.pointer = playerPointer;

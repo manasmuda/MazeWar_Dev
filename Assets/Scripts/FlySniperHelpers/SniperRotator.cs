@@ -14,29 +14,19 @@ public class SniperRotator : MonoBehaviour
 
     Vector2 lookInput;
 
+    Vector3 prefabOrigin;
+
     // Start is called before the first frame update
     void Start()
     {
+        prefabOrigin = transform.parent.position;
+
+        Client.clientInstance.character.transform.position = new Vector3(prefabOrigin.x, 1f, prefabOrigin.z - 1.5f);
         rightFingerId = -1;
 
         cameraSensitivity = 8;
 
         halfScreenWidth = Screen.width / 2;
-
-        RectTransform temprect = UIElementsScript.instance.shootingButton.transform.GetComponent<RectTransform>();
-        temprect.anchorMin = new Vector2(0, 0);
-        temprect.anchorMax = new Vector2(0, 0);
-        temprect.offsetMin = new Vector2(15, 15);
-        temprect.offsetMax = new Vector2(95, 95);
-        UIElementsScript.instance.joystick.interactable = false;
-        UIElementsScript.instance.joystick.alpha = 0;
-        UIElementsScript.instance.GadgetsGroup.interactable = false;
-        UIElementsScript.instance.GadgetsGroup.alpha = 0;
-        UIElementsScript.instance.crouchButton.interactable = false;
-        UIElementsScript.instance.crouchButton.alpha = 0;
-        UIElementsScript.instance.miniShootingButton.interactable = false;
-        UIElementsScript.instance.miniShootingButton.alpha = 0;
-
     }
 
     // Update is called once per frame

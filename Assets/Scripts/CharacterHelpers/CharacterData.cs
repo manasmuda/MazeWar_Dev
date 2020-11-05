@@ -16,6 +16,9 @@ public class CharacterData : MonoBehaviour
     public string id;
     public string team;
 
+    public int coinsHolding = 0;
+    public int tracersLeft = 2;
+
     void Start()
     {
         if (healthSlider == null)
@@ -64,7 +67,7 @@ public class CharacterData : MonoBehaviour
 
     public void NewPlayerState(ClientState state)
     {
-        SyncHealth(state.health);
+       SyncHealth(state.health);
     }
 
     public void SyncHealth(int health)

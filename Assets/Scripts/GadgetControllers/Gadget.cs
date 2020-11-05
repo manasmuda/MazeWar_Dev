@@ -17,6 +17,7 @@ public class Gadget : MonoBehaviour
     public GameObject gadetPrefab;
     public GameObject character;
 
+
     public bool timerMode = false;
     public float timer = 0f;
 
@@ -47,7 +48,7 @@ public class Gadget : MonoBehaviour
         return useLimit > 0 && enable;
     }
 
-    public virtual void CallAction()
+    public virtual void CallAction(string id="")
     {
         if (useLimit == 0)
             return;
@@ -65,6 +66,21 @@ public class Gadget : MonoBehaviour
         }
     }
 
+    public virtual Dictionary<string,GameObject> GetActiveGadgets()
+    {
+        return null;
+    }
+
+    public virtual void AddNewAutoState(AutoGadgetState gadgetState,string id)
+    {
+
+    }
+
+    public virtual void AddNewTimerState(AutoGadgetState gadgetState, string id)
+    {
+
+    }
+
     IEnumerator Reloading()
     {
         timer = reloadTime;
@@ -73,7 +89,7 @@ public class Gadget : MonoBehaviour
             timer = timer - 0.2f;
             yield return new WaitForSeconds(0.2f);
         }
-        this.EndAction();
+        EndAction();
     }
 
 }
