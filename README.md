@@ -10,6 +10,10 @@ Game Design Doc: https://docs.google.com/document/d/1jobyn4-HA8WsNLsFRskAFiibsDW
 
 Server code: https://github.com/manasmuda/MazeWar_Server
 
+Game Prototype files: https://drive.google.com/drive/folders/1cBpUZxT4i78q2AytXDIXXl6JmnRBC0jA?usp=sharing
+
+Prototype Demo Video: https://drive.google.com/file/d/1P0KXsLIAEZuaZ-GoaGjNB8tCdqxELK_9/view?usp=sharing
+
 ## Game Design Images ##
 
 ![alt text](https://github.com/manasmuda/MazeWar_Dev/blob/master/Images/logo_bg_orange.png?raw=true)
